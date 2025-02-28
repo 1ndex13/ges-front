@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+
+.container{
+    font-family: 'Oswald', sans-serif;
+    margin: 0 auto;
+    width: 1440px;
+}
+
+.oliman img{
+    filter: brightness(70%);
+    width: 1440px;
+    height: 400px;
+    position: absolute;
+    object-fit: cover;
+}
+
+.oliman h4, h1, p{
+    position: relative;
+}
+
+.oliman h4{
+    padding-top: 20px;
+    padding-left: 30px;
+    font-weight: 400;
+    font-size: 18px;
+    text-decoration: underline;
+    color: #fff;
+}
+
+.oliman h1{
+    padding-left: 30px;
+    color: #fff;
+    font-weight: 400;
+}
+
+.oliman p{
+    color: #fff;
+    font-weight: 300;
+    font-size: 18px;
+    width: 600px;
+    padding-left: 30px;
+}
+
+.ZagolovokOnas{
+    font-weight: 300;
+    font-size: 24px;
+    display: flex;
+    margin: 0 auto;
+    margin-top: 240px;
+    margin-bottom: 20px;
+}
+
+.info_cards {
+    display: flex;
+    gap: 60px;
+}
+
+.info_card img{
+    width: 440px;
+}
+
+.info_card p{ 
+    font-weight: 300;
+}
+.info_card h3{ 
+    font-weight: 400;
+}
+.info_card h6{
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 400;
+    color: #29a5d6;
+}
+
+.info_card h6:hover{
+    text-decoration: underline;
+    transform: scale(.98);
+    transition: transform 0.3s ease-in-out;
+}

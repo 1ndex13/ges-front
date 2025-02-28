@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+
+.container{
+    font-family: "Oswald", serif;
+    margin: 0 auto;
+    max-width: 1440px;
+    margin-top: 10px;
+}
+
+.container img{
+    margin-top: 10px;
+    width: 1440px;
+}
+
+.container h1{
+    margin-top: 50px;
+    font-weight: 400;
+    width: 700px;
+}
+
+.Actually{
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+.container p{ 
+
+    font-size: 22px;
+    font-weight: 300;
+}
+
+
+.card {
+  margin-top: 20px;
+  cursor: pointer;
+    position: relative; /* Для позиционирования дочерних элементов */
+    width: 450px; /* Ширина карточки */
+    height: 300px; /* Высота карточки */
+    overflow: hidden; /* Скрываем переполнение */
+    border-radius: 10px; /* Закругленные углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+    transition: transform 0.3s; /* Плавный переход при масштабировании */
+  }
+  
+  .card img{
+    position: relative;
+    top: -10px;
+    border-radius: 10px;
+    width: 450px;
+    height: 300px;
+  }
+  .card:hover {
+    transform: scale(1.05); /* Увеличиваем карточку при наведении */
+  }
+  
+  .overlay {
+    position: absolute; /* Абсолютное позиционирование для наложения текста */
+    bottom: -80px; /* Начальная позиция текста (снизу) */
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный фон */
+    color: white; /* Цвет текста */
+    display: flex; /* Flexbox для центрирования текста */
+    flex-direction: column; /* Вертикальное расположение текста */
+    align-items: center; /* Центрируем по горизонтали */
+    justify-content: center; /* Центрируем по вертикали */
+    transition: bottom 0.3s ease-in-out; /* Плавный переход для поднятия текста */
+  }
+  
+  .overlay.show {
+    bottom: 0px; /* Конечная позиция текста (приблизительно на расстоянии от низа) */
+  }
+   
+  .card p{
+    font-size: 18px;
+    width: 400px;
+  }
+  
+.cards{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+
+.sliderContainer {
+    top: 30px;
+    font-family: "Oswald", sans-serif;
+    position: relative;
+    max-width: 1440px;
+    margin: auto;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+}
+
+.slideContent h2{
+  font-weight: 400;
+}
+
+.slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slideImage {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.slideContent {
+  text-shadow: 0px 3px 3px rgba(71, 71, 71, 0.5);
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    background-color: #aab9c9;
+    padding-left: 15px;
+    padding-right: 15px;
+    border-radius: 5px;
+    font-weight: 400;
+}
+
+.prevButton,
+.nextButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #aab9c9;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 12px;
+    width: 35px;
+}
+
+.prevButton {
+    left: 10px;
+}
+
+.nextButton {
+    right: 10px;
+}
+
+.prevButton:hover,
+.nextButton:hover {
+    background-color: #aac5e2;
+}
+
