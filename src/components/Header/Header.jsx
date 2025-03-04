@@ -8,15 +8,19 @@ export const Header = ({ isAuthenticated, onLogout }) => {
       <div className={style.container}>
         <nav id="navMenu" className={style.navigation}>
           <Link to="/about">О нас</Link>
-          <Link to="/catalog">Каталог</Link>
+          <Link to="/catalog">Каталог</Link>{isAuthenticated  &&(
+            <>
+            <Link to="/catalog">Мои услуги</Link>
+            </>
+          )
+          }
           <Link to="/">Global Energy Solution</Link>
           <Link to="/contacts">Контакты</Link>
           {isAuthenticated ? (
             <>
               <Link to="/profile">Профиль</Link>
-              <button onClick={onLogout} className={style.logoutButton}>
-                Выйти
-              </button>
+              
+              <Link onClick={onLogout}>Выход</Link>
             </>
           ) : (
             <Link to="/login">Вход</Link>

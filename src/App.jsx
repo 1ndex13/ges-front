@@ -9,6 +9,7 @@ import { Catalog } from "./components/Main/components/Pages/Catalog/Catalog";
 import { Contacts } from "./components/Main/components/Pages/Contacts/Contacts";
 import { Login } from "./components/Main/components/Pages/Login/Login";
 import { Profile } from "./components/Main/components/Pages/Profile/Profile";
+import { GasStation } from "./components/Main/components/Pages/Catalog/CatalogCard/GasStation";
 import "./App.css";
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
           path="/profile"
           element={<Profile isAuthenticated={isAuthenticated} />}
         />
+        <Route path="/gas-station"  element={<GasStation/>}/>
       </Routes>
       <Footer />
     </>

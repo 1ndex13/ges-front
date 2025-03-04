@@ -1,5 +1,6 @@
 import { useState } from "react";
 import style from "./Catalog.module.css";
+import { Link } from "react-router-dom";
 
 export const Catalog = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null); // Состояние для хранения индекса наведеной карточки
@@ -8,12 +9,13 @@ export const Catalog = () => {
     {
       title: "Сеть АЗС «Global Energy Solution»",
       description: "Высококачественное топливо, товары в дорогу и высокий уровень обслуживания",
-      imgSrc: "./gas-station.png"
+      imgSrc: "./gas-station.png",
+      to: "/gas-station"
     },
     {
       title: "Программа лояльности «Нам по пути!»",
       description: "За каждую покупку начисляются бонусы, которыми можно оплатить топливо или товары",
-      imgSrc: "./public/understated-cartoon-style-loyalty-program--on-our-.png"
+      imgSrc: "./understated-cartoon-style-loyalty-program--on-our-.png"
     },
     {
       title: "Моторное масло S-Energy и «Global Energy Solution»",
@@ -48,7 +50,8 @@ export const Catalog = () => {
     {
       title: "Битумы",
       description: "«Global Energy Solution» является одним из крупнейших производителей и поставщиков битумной продукции в России",
-      imgSrc: "./products.png"
+      imgSrc: "./products.png",
+      to: "/pol"
     },
     
     
@@ -73,7 +76,7 @@ export const Catalog = () => {
                 <div className={style.back}>
                   <h3>{card.title}</h3>
                   <p>{card.description}</p>
-                  <a href="">Подробнее</a>
+                  <Link to={card.to}>Подробнее</Link>
                 </div>
               </div>
             ))}

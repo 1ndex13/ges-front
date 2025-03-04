@@ -61,7 +61,13 @@ export const Login = ({ onLogin }) => { // Принимаем onLogin как п�
         />
         {error && <p style={{ color: "red" }}>{error}</p>}
         <button type="submit">Войти</button>
+        <div className={style.forgetPassword}>
+          <p>
+            <Link to="/">Забыли пароль?</Link>
+          </p>
+        </div>
       </form>
+      
     </div>
   );
 };

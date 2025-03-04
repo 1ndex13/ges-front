@@ -84,11 +84,21 @@ input{
 
 .authText a{
   text-decoration: none;
-  padding-top: 10px;
+  padding-top: 20px;
   cursor: pointer;
   align-items: center;
   font-size: 14px;
   color: #666;
+}
+
+.forgetPassword a{
+  text-decoration: none;
+  padding-top: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  justify-content: end;
+
 }
 
 .authForm input {

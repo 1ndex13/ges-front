@@ -1,0 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+
+.container{
+    width: 1440px;
+    margin: 0 auto;
+}
+h1{
+    color: red;
+}
