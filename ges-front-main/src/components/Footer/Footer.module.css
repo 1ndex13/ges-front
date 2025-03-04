@@ -1,0 +1,34 @@
+.container{
+    font-family: "Oswald", sans-serif;
+    width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+
+.menu_footer{
+    margin-top: 40px;
+}
+
+.menu_footer h3{
+    font-weight: 500;
+}
+
+.menu_footer p{
+    display: flex;
+    align-items: center;
+    font-weight: 300;
+}
+
+.menu_footer h5{
+    margin-top: -10px;
+    font-weight: 300;
+    width: 230px;
+}
+
+.menu_footer img{
+    width: 24px;
+    margin-right: 5px;
+}

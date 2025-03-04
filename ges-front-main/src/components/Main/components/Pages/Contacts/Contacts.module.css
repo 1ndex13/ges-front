@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+
+.container{
+    font-family: "Oswald", serif;
+    margin: 0 auto;
+    max-width: 1440px;
+    margin-top: 10px;
+    min-height: 55vh;
+}
+
+.container img{
+    margin-top: 10px;
+    width: 1440px;
+}
+
+.container h2{
+    font-weight: 400;
+}
+
+.Actually{
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.container p{ 
+    font-size: 22px;
+    font-weight: 300;
+}
+
+.flex{
+    display: flex;
+    justify-content: space-between;
+}
+
+a{
+    display: flex;
+}
+
+
+iframe{
+    border: 2px solid #aab9c9;
+    border-radius: 15px;
+}
+
+.contact h2{
+    color: #fff;
+    margin-bottom: 0;
+    text-shadow: 0px 3px 3px rgba(71, 71, 71, 0.5);
+    font-weight: 400;
+    padding-left:23px;
+}
+
+.contact{
+    padding: 10px 50px 10px 30px;
+    background-color: #aab9c9;
+    border-radius: 10px;
+}
+
+.contact li{
+    color: #fff;
+    text-shadow: 0px 3px 3px rgba(71, 71, 71, 0.5);
+    font-weight: 300;
+}
+
+
+.Actually {
+    margin-top: 30px;
+    font-weight: 300;
+    margin-bottom: 10px;
+  }
+
+
+.address_phone{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.social{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 300px;
+}
+
+
+.social a{
+    border: 2px solid #aab9c9;
+    border-radius: 30px;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+
+.social img{
+    width: 28px;
+    height: 28px;
+    transform:rotate(135deg);
+}
+
+.social a:last-child{
+    background-color: #aab9c9;
+    color: #fff;
+    text-shadow: 0px 3px 3px rgba(71, 71, 71, 0.5);
+}
+
+.social a:hover{
+    transform: scale(1.04);
+    transition: transform 0.3s ease-in-out;
+}
