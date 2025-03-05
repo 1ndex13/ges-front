@@ -63,7 +63,7 @@ export const Login = ({ onLogin }) => { // Принимаем onLogin как п�
         <button type="submit">Войти</button>
         <div className={style.forgetPassword}>
           <p>
-            <Link to="/">Забыли пароль?</Link>
+            <Link to="/forgot-password">Забыли пароль?</Link>
           </p>
         </div>
       </form>

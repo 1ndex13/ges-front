@@ -10,6 +10,7 @@ import { Contacts } from "./components/Main/components/Pages/Contacts/Contacts";
 import { Login } from "./components/Main/components/Pages/Login/Login";
 import { Profile } from "./components/Main/components/Pages/Profile/Profile";
 import { GasStation } from "./components/Main/components/Pages/Catalog/CatalogCard/GasStation";
+import { ForgotPassword } from "./components/Main/components/Pages/ForgotPassword/ForgotPassword";
 import "./App.css";
 
 function App() {
@@ -29,10 +30,10 @@ function App() {
     setIsAuthenticated(true); // Обновляем состояние авторизации
   };
 
-  // Функция для выхода из системы
+
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setIsAuthenticated(false); // Обновляем состояние авторизации
+    setIsAuthenticated(false); 
   };
 
   return (
@@ -45,7 +46,7 @@ function App() {
         <Route path="/contacts" element={<Contacts />} />
         <Route
           path="/login"
-          element={<Login onLogin={handleLogin} />} // Передаем handleLogin в Login
+          element={<Login onLogin={handleLogin} />} 
         />
         <Route path="/register" element={<Register />} />
         <Route
@@ -53,6 +54,7 @@ function App() {
           element={<Profile isAuthenticated={isAuthenticated} />}
         />
         <Route path="/gas-station"  element={<GasStation/>}/>
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
       <Footer />
     </>
