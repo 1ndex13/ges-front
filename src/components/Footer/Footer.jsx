@@ -7,11 +7,8 @@ export const Footer = () =>{
             <div className={style.menu_footer}>
             <h3>Полезные ссылки</h3>
             <p>Противодействие мошенничеству</p>
-            <p>Карта АЗС</p>
             <p>Топливные карты</p>
-            <p>Программа лояльности</p>
-            <p>Моторнеы топливо оптом</p>
-            <p>Вакансии</p>
+            <p>Наши маршруты</p>
             </div>
             <div className={style.menu_footer}>
             <h3>Социальные сети</h3>
@@ -26,8 +23,6 @@ export const Footer = () =>{
             <h3>Конаткты Global Energy Solution</h3>
             <p>8 800 700 3152</p>
             <h5>Горячая линия «Global Energy Solution» (бесплатный звонок по России)</h5>
-            <p>Обратная связь</p>
-            <p>Все контакты</p>
             </div>
             <div className={style.menu_footer}>
             <h3>Контакты сети АЗС</h3>

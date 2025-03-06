@@ -13,6 +13,27 @@
 /* Класс для контейнера карточек */
 
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: 1px solid #aab9c9;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #aab9c9;
+  color: #fff;
+  border-color: #aab9c9;
+}
+
+
 .cards {
     display: flex;
     justify-content: space-between;

@@ -5,7 +5,7 @@ export const AboutUs = () => {
   return (
     <div className={style.container}>
       <div className={style.oliman}>
-        <img src="./public/a-clean-oilman-at-work.png" alt="" />
+        <img src="./world.png" alt="" />
         <h4>О компании</h4>
         <h1>Миссия и стратегия развития</h1>
         <p>
@@ -19,7 +19,7 @@ export const AboutUs = () => {
       
       <div className={style.info_cards}>
         <div className={style.info_card}>
-          <img src="./oliman.png" alt="" />
+          <img src="./sbit.png" alt="" />
           <h3>О «Global Energy Solution»</h3>
           <p>
             Основные виды деятельности компании — поиск месторождений

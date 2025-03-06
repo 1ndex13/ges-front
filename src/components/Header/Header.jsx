@@ -10,7 +10,7 @@ export const Header = ({ isAuthenticated, onLogout }) => {
           <Link to="/about">О нас</Link>
           <Link to="/catalog">Каталог</Link>{isAuthenticated  &&(
             <>
-            <Link to="/catalog">Мои услуги</Link>
+            <Link to="/my-services">Мои услуги</Link>
             </>
           )
           }
