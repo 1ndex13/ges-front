@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export const Analyse = ({ isAuthenticated, addService }) => {
   const navigate = useNavigate();
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (!isAuthenticated) {
       // Если пользователь не авторизован, перенаправляем на страницу регистрации
       navigate("/login");
@@ -14,12 +14,36 @@ export const Analyse = ({ isAuthenticated, addService }) => {
       const service = {
         title: "Анализ проектов",
         description: "Комплексный анализ проектов от геологии до финансово-налоговых аспектов",
+        price: 500000.0, // Добавляем цену
+        category: "Аналитика", // Добавляем категорию
         imgSrc: "./money.png",
       };
-      addService(service); // Передаем услугу в функцию добавления
-      navigate("/my-services"); // Перенаправляем на страницу "Мои услуги"
+      try {
+        // Отправляем данные на бэкенд
+        const response = await fetch("http://localhost:8080/api/services", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(service),
+        });
+
+        if (response.ok) {
+          const savedService = await response.json();
+          addService(savedService); // Добавляем услугу в состояние фронтенда
+          navigate("/my-services"); // Перенаправляем на страницу "Мои услуги"
+        } else {
+          console.error("Ошибка при сохранении услуги");
+        }
+      } catch (error) {
+        console.error("Ошибка при отправке запроса:", error);
+      }
     }
   };
+
+
+
+
 
   return (
     <>
