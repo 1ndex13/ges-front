@@ -9,7 +9,7 @@ import { Catalog } from "./components/Main/components/Pages/Catalog/Catalog";
 import { Contacts } from "./components/Main/components/Pages/Contacts/Contacts";
 import { Login } from "./components/Main/components/Pages/Login/Login";
 import { Profile } from "./components/Main/components/Pages/Profile/Profile";
-import { Kar } from "./components/Main/components/Pages/Catalog/CatalogCard/kar";
+import { Kar } from "./components/Main/components/Pages/Catalog/CatalogCard/Kar";
 import { Bur } from "./components/Main/components/Pages/Catalog/CatalogCard/Bur";
 import { Cor } from "./components/Main/components/Pages/Catalog/CatalogCard/Cor";
 import { Geo } from "./components/Main/components/Pages/Catalog/CatalogCard/Geo";
