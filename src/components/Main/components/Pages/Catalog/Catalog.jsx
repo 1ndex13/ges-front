@@ -1,8 +1,10 @@
 import { useState } from "react";
 import style from "./Catalog.module.css";
 import { Link } from "react-router-dom";
+import ProductForm from "../../ProductFrom";
+import ProductList from "../../ProductList";
 
-export const Catalog = () => {
+export const Catalog = ({ isAuthenticated, userRole }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null); // Состояние для хранения индекса наведеной карточки
   const [currentPage, setCurrentPage] = useState(1); // Состояние для хранения текущей страницы
   const cardsPerPage = 6; // Количество карточек на странице
@@ -93,6 +95,14 @@ export const Catalog = () => {
       <main>
         <div className={style.container}>
           <div className={style.Actually}>Наша продукция</div>
+         
+          {isAuthenticated && userRole === "ADMIN" && (
+            <>
+              <ProductForm />
+              <ProductList />
+            </>
+          )}
+
           <div className={style.cards}>
             {currentCards.map((card, index) => (
               <div

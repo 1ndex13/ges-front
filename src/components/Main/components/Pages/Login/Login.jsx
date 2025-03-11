@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import style from "./Login.module.css";
 
-export const Login = ({ onLogin }) => { // Принимаем onLogin как пропс
+export const Login = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -67,7 +67,6 @@ export const Login = ({ onLogin }) => { // Принимаем onLogin как п�
           </p>
         </div>
       </form>
-      
     </div>
   );
 };

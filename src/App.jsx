@@ -27,25 +27,29 @@ import "./App.css";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [myServices, setMyServices] = useState([]); // Состояние для хранения заказанных услуг
+  const [userRole, setUserRole] = useState(null); // Состояние для роли пользователя
+  const [myServices, setMyServices] = useState([]);
 
   // Проверяем, авторизован ли пользователь при загрузке приложения
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setIsAuthenticated(true);
+      setUserRole(user.role); // Устанавливаем роль пользователя
     }
   }, []);
 
   // Функция для обновления состояния авторизации
   const handleLogin = (userData) => {
     localStorage.setItem("user", JSON.stringify(userData));
-    setIsAuthenticated(true); // Обновляем состояние авторизации
+    setIsAuthenticated(true);
+    setUserRole(userData.role); // Устанавливаем роль пользователя
   };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     setIsAuthenticated(false);
+    setUserRole(null); // Сбрасываем роль пользователя
   };
 
   // Функция для добавления услуги в "Мои услуги"
@@ -69,7 +73,7 @@ function App() {
         />
         <Route
           path="/my-services"
-          element={<MyServices services={myServices} />} // Передаем список услуг
+          element={<MyServices services={myServices} />}
         />
         <Route
           path="/geo"
