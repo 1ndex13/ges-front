@@ -1,31 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
+import { observer } from "mobx-react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import style from "./Login.module.css";
+import { userStore } from "../../../../api/UserStore";
 
-export const Login = ({ onLogin }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+
+export const Login = observer(() => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:8080/api/auth/login", {
-        username: username,
-        password: password,
-      });
-      console.log("Успешная авторизация:", response.data);
-
-      // Сохраняем данные пользователя в localStorage
-      localStorage.setItem("user", JSON.stringify(response.data));
-      onLogin(response.data); // Вызываем onLogin для обновления состояния в App.jsx
-      navigate("/profile"); // Перенаправляем на страницу профиля
-    } catch (err) {
-      setError("Неверный логин или пароль");
-      console.error("Ошибка авторизации:", err);
-    }
+    await userStore.login(navigate);
   };
 
   return (
@@ -48,18 +33,18 @@ export const Login = ({ onLogin }) => {
         <input
           type="text"
           placeholder="Логин"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={userStore.username}
+          onChange={(e) => userStore.setUsername(e.target.value)}
           required
         />
         <input
           type="password"
           placeholder="Пароль"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={userStore.password}
+          onChange={(e) => userStore.setPassword(e.target.value)}
           required
         />
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {userStore.error && <p style={{ color: "red" }}>{userStore.error}</p>}
         <button type="submit">Войти</button>
         <div className={style.forgetPassword}>
           <p>
@@ -69,4 +54,4 @@ export const Login = ({ onLogin }) => {
       </form>
     </div>
   );
-};
+});

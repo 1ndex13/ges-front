@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
+import { observer } from "mobx-react";
 import { useNavigate } from "react-router-dom";
+import { userStore } from "../../../../api/UserStore";
 
-export const Profile = ({ isAuthenticated }) => {
+export const Profile = observer(() => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!userStore.isAuthenticated) {
       navigate("/login");
     }
-  }, [isAuthenticated, navigate]);
+  }, [userStore.isAuthenticated, navigate]);
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  if (!isAuthenticated) {
+  if (!userStore.isAuthenticated) {
     return null;
   }
 
@@ -23,4 +25,4 @@ export const Profile = ({ isAuthenticated }) => {
       <p>Email: {user.email}</p>
     </div>
   );
-};
+});
