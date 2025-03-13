@@ -1,14 +1,15 @@
 import React from "react";
 import { observer } from "mobx-react";
 import style from "./Register.module.css";
-import { Link } from 'react-router-dom';
-import { userStore } from "../../../../api/UserStore";
-
+import { Link, useNavigate } from 'react-router-dom';
+import { userStore } from "../../../../../api/UserStore";
 
 export const Register = observer(() => {
+  const navigate = useNavigate(); // Получаем функцию navigate
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await userStore.register(navigate);
+    await userStore.register(navigate); // Передаем navigate в userStore.register
   };
 
   return (

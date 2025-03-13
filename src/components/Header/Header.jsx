@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react"; // Добавьте observer
 import style from "./Header.module.css";
 import { Link } from "react-router-dom";
-import { userStore } from "../api/UserStore";
+import { userStore } from "../../api/UserStore";
 
 export const Header = observer(() => { // Оберните в observer
   return (
