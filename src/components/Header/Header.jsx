@@ -1,14 +1,20 @@
-import React from "react";
-import { observer } from "mobx-react"; // Добавьте observer
+import React, { useState } from "react";
+import { observer } from "mobx-react";
 import style from "./Header.module.css";
 import { Link } from "react-router-dom";
 import { userStore } from "../../api/UserStore";
 
-export const Header = observer(() => { // Оберните в observer
+export const Header = observer(() => {
+  const [isMenuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!isMenuOpen);
+  };
+
   return (
     <header>
       <div className={style.container}>
-        <nav id="navMenu" className={style.navigation}>
+        <nav id="navMenu" className={`${style.navigation} ${isMenuOpen ? style.open : ""}`}>
           <Link to="/about">О нас</Link>
           <Link to="/catalog">Каталог</Link>
           {userStore.isAuthenticated && (
@@ -21,12 +27,17 @@ export const Header = observer(() => { // Оберните в observer
           {userStore.isAuthenticated ? (
             <>
               <Link to="/profile">Профиль</Link>
-              <Link onClick={() => userStore.logout(navigate)}>Выход</Link> 
+              <Link onClick={() => userStore.logout(navigate)}>Выход</Link>
             </>
           ) : (
             <Link to="/login">Вход</Link>
           )}
         </nav>
+        <div className={style.burger} onClick={toggleMenu}>
+          <div className={style.burgerLine}></div>
+          <div className={style.burgerLine}></div>
+          <div className={style.burgerLine}></div>
+        </div>
       </div>
     </header>
   );

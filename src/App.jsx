@@ -1,28 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Header } from "./components/Header/Header";
-import { Main } from "./components/Main/Main";
-import { Register } from "./components/Main/components/Pages/Register/Register";
+import { FullCard } from "./components/Main/CatalogCard/FullCard";
+import { MainContent } from "./components/Main/MainContent/MainContent";
+import { Register } from "./components/Main/Register/Register";
 import { Footer } from "./components/Footer/Footer";
-import { AboutUs } from "./components/Main/components/Pages/AboutUs/AboutUs";
-import { Catalog } from "./components/Main/components/Pages/Catalog/Catalog";
-import { Contacts } from "./components/Main/components/Pages/Contacts/Contacts";
-import { Login } from "./components/Main/components/Pages/Login/Login";
-import { Profile } from "./components/Main/components/Pages/Profile/Profile";
-import { Kar } from "./components/Main/components/Pages/Catalog/CatalogCard/Kar";
-import { Bur } from "./components/Main/components/Pages/Catalog/CatalogCard/Bur";
-import { Cor } from "./components/Main/components/Pages/Catalog/CatalogCard/Cor";
-import { Geo } from "./components/Main/components/Pages/Catalog/CatalogCard/Geo";
-import { Storage } from "./components/Main/components/Pages/Catalog/CatalogCard/Storage";
-import { Rast } from "./components/Main/components/Pages/Catalog/CatalogCard/Rast";
-import { Peno } from "./components/Main/components/Pages/Catalog/CatalogCard/Peno";
-import { Bunk } from "./components/Main/components/Pages/Catalog/CatalogCard/Bunk";
-import { Bit } from "./components/Main/components/Pages/Catalog/CatalogCard/Bit";
-import { Transport } from "./components/Main/components/Pages/Catalog/CatalogCard/Transport";
-import { Analyse } from "./components/Main/components/Pages/Catalog/CatalogCard/Analyse";
-import { Auto } from "./components/Main/components/Pages/Catalog/CatalogCard/Auto";
-import { ForgotPassword } from "./components/Main/components/Pages/ForgotPassword/ForgotPassword";
-import { MyServices } from "./components/Main/components/Pages/MyServices/MyServices";
+import { AboutUs } from "./components/Main/AboutUs/AboutUs";
+import { Catalog } from "./components/Main/Catalog/Catalog";
+import { Contacts } from "./components/Main/Contacts/Contacts";
+import { Login } from "./components/Main/Login/Login";
+import { Profile } from "./components/Main/Profile/Profile";
+import { ForgotPassword } from "./components/Main/ForgotPassword/ForgotPassword";
+import { MyServices } from "./components/Main/MyServices/MyServices";
 import "./App.css";
 
 function App() {
@@ -63,7 +52,8 @@ function App() {
       <Routes>
         <Route path="/about" element={<AboutUs />} />
         <Route path="/catalog" element={<Catalog />} />
-        <Route path="/" element={<Main />} />
+        <Route path="/catalog/:id" element={<FullCard />} />
+        <Route path="/" element={<MainContent />} />
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" element={<Register />} />
@@ -74,54 +64,6 @@ function App() {
         <Route
           path="/my-services"
           element={<MyServices services={myServices} />}
-        />
-        <Route
-          path="/geo"
-          element={<Geo isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/kar"
-          element={<Kar isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/bur"
-          element={<Bur isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/rast"
-          element={<Rast isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/cor"
-          element={<Cor isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/peno"
-          element={<Peno isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/storage"
-          element={<Storage isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/bunk"
-          element={<Bunk isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/bit"
-          element={<Bit isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/analyse"
-          element={<Analyse isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/auto"
-          element={<Auto isAuthenticated={isAuthenticated} addService={addService} />}
-        />
-        <Route
-          path="/transport"
-          element={<Transport isAuthenticated={isAuthenticated} addService={addService} />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>

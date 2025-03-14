@@ -1,34 +1,66 @@
-.container{
+.footer {
+    padding: 20px 0;
+    margin-top: auto;
+  }
+  
+  .container {
     font-family: "Oswald", sans-serif;
-    width: 1440px;
+    max-width: 1440px;
+    width: 100%;
     margin: 0 auto;
+    padding: 0 20px; /* Отступы по бокам */
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap; /* Перенос блоков на новую строку */
     cursor: pointer;
-}
-
-
-.menu_footer{
+  }
+  
+  .menu_footer {
     margin-top: 40px;
-}
-
-.menu_footer h3{
+    flex: 1 1 200px; /* Гибкость блоков */
+    margin-right: 20px; /* Отступ между блоками */
+  }
+  
+  .menu_footer h3 {
     font-weight: 500;
-}
-
-.menu_footer p{
+  }
+  
+  .menu_footer p {
     display: flex;
     align-items: center;
     font-weight: 300;
-}
-
-.menu_footer h5{
+  }
+  
+  .menu_footer h5 {
     margin-top: -10px;
     font-weight: 300;
     width: 230px;
-}
-
-.menu_footer img{
+  }
+  
+  .menu_footer img {
     width: 24px;
     margin-right: 5px;
-}
+  }
+  
+  /* Медиа-запросы для адаптивности */
+  @media (max-width: 768px) {
+    .container {
+        padding: 0;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  
+    .menu_footer {
+      margin-right: 0;
+      margin-bottom: 20px;
+    }
+  
+    .menu_footer h5 {
+      width: 100%; /* Убираем фиксированную ширину */
+    }
+    .menu_footer p {
+        flex-direction: column;
+         /* Убираем фиксированную ширину */
+      }
+  }
