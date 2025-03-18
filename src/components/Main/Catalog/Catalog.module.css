@@ -129,3 +129,94 @@
     color: #fff;
     border-color: #aab9c9;
 }
+
+
+
+
+.edit_form_container {
+    font-family: "Oswald", sans-serif;
+    width: 450px; /* Соответствует ширине карточек в Catalog */ /* Центрируем и добавляем отступ снизу как у .cards */
+    background-color: #f9f9f9; /* Фон как у обратной стороны карточки */
+    border-radius: 10px; /* Скругленные углы как у карточек */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Легкая тень для глубины */
+  }
+  
+  .edit_form_container h2 {
+    font-size: 24px;
+    font-weight: 400; /* Легкий вес как у заголовков карточек */
+    margin-bottom: 20px;
+  }
+  
+  .edit_form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Отступ между полями */
+  }
+  
+  .edit_form_label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 300; /* Легкий вес как у текста в карточках */
+    font-size: 16px;
+  }
+  
+  .edit_form_input,
+  .edit_form_textarea {
+    font-family: "Oswald", sans-serif;
+    width: 100%;
+    padding: 8px 12px;
+    margin-top: 5px;
+    border: 1px solid #aab9c9; /* Граница как у кнопок пагинации */
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 300;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+  }
+  
+  .edit_form_input:focus,
+  .edit_form_textarea:focus {
+    border-color: #aab9c9; /* Цвет акцента как у ссылок */
+    outline: none;
+  }
+  
+  .edit_form_textarea {
+    resize: vertical; /* Позволяем изменять высоту, но не ширину */
+    min-height: 80px; /* Минимальная высота для удобства ввода */
+  }
+  
+  .edit_form_buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .edit_form_save,
+  .edit_form_cancel {
+    font-family: "Oswald", sans-serif;
+    padding: 8px 20px;
+    border: 1px solid #aab9c9; /* Как у кнопок пагинации */
+    border-radius: 5px;
+    background-color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .edit_form_save {
+    background-color: #aab9c9; /* Основной цвет акцента */
+    color: #fff;
+  }
+  
+  .edit_form_save:hover {
+    background-color: #aab9c9; /* Темнее при наведении */
+  }
+  
+  .edit_form_cancel {
+    background-color: #fff;
+  }
+  
+  .edit_form_cancel:hover {
+    background-color: #f0f0f0; /* Легкий серый фон при наведении */
+  }

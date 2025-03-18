@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom"; // Добавляем useNavigate
 import { Header } from "./components/Header/Header";
 import { FullCard } from "./components/Main/CatalogCard/FullCard";
 import { MainContent } from "./components/Main/MainContent/MainContent";
@@ -12,59 +12,66 @@ import { Login } from "./components/Main/Login/Login";
 import { Profile } from "./components/Main/Profile/Profile";
 import { ForgotPassword } from "./components/Main/ForgotPassword/ForgotPassword";
 import { MyServices } from "./components/Main/MyServices/MyServices";
+import { userStore } from "./api/UserStore";
 import "./App.css";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState(null); // Состояние для роли пользователя
   const [myServices, setMyServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate(); // Добавляем хук для навигации
 
-  // Проверяем, авторизован ли пользователь при загрузке приложения
+  // Синхронизация с userStore
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setIsAuthenticated(true);
-      setUserRole(user.role); // Устанавливаем роль пользователя
-    }
+    const syncUserStore = () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.success) {
+        userStore.setIsAuthenticated(true);
+        userStore.username = user.username;
+        userStore.setRoles(user.roles || []);
+      }
+      setIsLoading(false); // Завершаем загрузку после синхронизации
+    };
+    syncUserStore();
   }, []);
 
-  // Функция для обновления состояния авторизации
-  const handleLogin = (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    setIsAuthenticated(true);
-    setUserRole(userData.role); // Устанавливаем роль пользователя
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    setIsAuthenticated(false);
-    setUserRole(null); // Сбрасываем роль пользователя
+    userStore.logout(navigate);
+    setMyServices([]);
   };
 
-  // Функция для добавления услуги в "Мои услуги"
   const addService = (service) => {
-    setMyServices([...myServices, service]);
+    setMyServices((prev) => [...prev, service]);
   };
+
+  // Пока идет загрузка, показываем индикатор (или ничего)
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
 
   return (
     <>
-      <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+      <Header isAuthenticated={userStore.isAuthenticated} onLogout={handleLogout} />
       <Routes>
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/catalog" element={<Catalog />} />
-        <Route path="/catalog/:id" element={<FullCard />} />
+        <Route
+          path="/catalog"
+          element={
+            <Catalog
+              isAuthenticated={userStore.isAuthenticated}
+              userRole={userStore.roles}
+            />
+          }
+        />
+        <Route
+          path="/catalog/:id"
+          element={<FullCard isAuthenticated={userStore.isAuthenticated} addService={addService} />}
+        />
         <Route path="/" element={<MainContent />} />
         <Route path="/contacts" element={<Contacts />} />
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route
-          path="/profile"
-          element={<Profile isAuthenticated={isAuthenticated} />}
-        />
-        <Route
-          path="/my-services"
-          element={<MyServices services={myServices} />}
-        />
+        <Route path="/profile" element={<Profile isAuthenticated={userStore.isAuthenticated} />} />
+        <Route path="/my-services" element={<MyServices services={myServices} />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
       <Footer />

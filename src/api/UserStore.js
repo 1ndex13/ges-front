@@ -8,6 +8,7 @@ class UserStore {
   confirmPassword = "";
   error = "";
   isAuthenticated = false;
+  roles = [];
 
   constructor() {
     makeAutoObservable(this);
@@ -37,46 +38,46 @@ class UserStore {
     this.isAuthenticated = isAuthenticated;
   }
 
+  setRoles(roles) {
+    this.roles = roles;
+  }
+
   async login(navigate) {
     try {
       const response = await axios.post("http://localhost:8080/api/auth/login", {
         username: this.username,
         password: this.password,
       });
-      console.log("Успешная авторизация:", response.data);
-
-      localStorage.setItem("user", JSON.stringify(response.data));
-      this.setIsAuthenticated(true);
-      navigate("/profile"); // Навигация после успешного входа
+      const data = response.data;
+      if (data.success) {
+        this.setIsAuthenticated(true);
+        this.setRoles(data.roles || []);
+        localStorage.setItem("user", JSON.stringify(data));
+        navigate("/profile");
+      } else {
+        this.setError("Неверный логин или пароль");
+      }
     } catch (err) {
-      this.setError("Неверный логин или пароль");
+      this.setError("Ошибка авторизации");
       console.error("Ошибка авторизации:", err);
     }
   }
 
-  async register(navigate) { // Принимаем navigate как параметр
-    if (!this.validateForm()) {
-      return;
-    }
+  async register(navigate) {
+    if (!this.validateForm()) return;
     try {
       const response = await axios.post("http://localhost:8080/api/auth/register", {
         username: this.username,
         email: this.email,
         password: this.password,
-        confirmPassword: this.confirmPassword,
       });
-      console.log("Успешная регистрация:", response.data);
-      navigate("/login"); // Навигация после успешной регистрации
+      navigate("/login");
     } catch (err) {
-      if (err.response) {
-        if (err.response.status === 400) {
-          this.setError("Пользователь с таким именем или email уже существует");
-        } else {
-          this.setError("Ошибка регистрации");
-        }
-      } else {
-        this.setError("Ошибка сети или сервер недоступен");
-      }
+      this.setError(
+        err.response?.status === 400
+          ? "Пользователь с таким именем или email уже существует"
+          : "Ошибка регистрации"
+      );
       console.error("Ошибка регистрации:", err);
     }
   }
@@ -101,10 +102,16 @@ class UserStore {
     return true;
   }
 
-  logout(navigate) { // Принимаем navigate как параметр
+  logout(navigate) {
     localStorage.removeItem("user");
     this.setIsAuthenticated(false);
-    navigate("/login"); // Навигация после выхода
+    this.setRoles([]);
+    this.username = "";
+    this.email = "";
+    this.password = "";
+    this.confirmPassword = "";
+    this.error = "";
+    navigate("/login"); // Перенаправление на страницу логина
   }
 }
 

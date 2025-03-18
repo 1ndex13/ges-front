@@ -1,18 +1,29 @@
 import { useState } from "react";
 import style from "./Catalog.module.css";
-import { ProductForm } from "./ProductForm";
+import { EditProductForm } from "./EditProductForm";
 import { useNavigate, Link } from "react-router-dom";
-import { cardsData } from "../../../Scripts/cardsData"; // Импортируем данные карточек// Импортируем универсальный компонент
+import { cardsData } from "../../../Scripts/cardsData";
 
 export const Catalog = ({ isAuthenticated, userRole }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [cards, setCards] = useState(cardsData); // Используем состояние для карточек
+  const [cards, setCards] = useState(cardsData);
+  const [editingIndex, setEditingIndex] = useState(null);
   const cardsPerPage = 6;
 
-  // Функция для добавления новой карточки
   const handleAddProduct = (newProduct) => {
-    setCards([...cards, newProduct]); // Добавляем новую карточку в состояние
+    setCards((prev) => [...prev, newProduct]); // Добавляем карточку с id от бэкенда
+  };
+
+  const handleDeleteProduct = (index) => {
+    setCards((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleEditProduct = (index, updatedProduct) => {
+    setCards((prev) =>
+      prev.map((card, i) => (i === index ? { ...card, ...updatedProduct } : card))
+    );
+    setEditingIndex(null);
   };
 
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -27,8 +38,8 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
         <div className={style.container}>
           <div className={style.Actually}>Наша продукция</div>
 
-          {isAuthenticated && userRole === "ADMIN" && (
-            <ProductForm onAddProduct={handleAddProduct} />
+          {isAuthenticated && userRole?.includes("ADMIN") && (
+            <EditProductForm onAddProduct={handleAddProduct} />
           )}
 
           <div className={style.cards}>
@@ -46,6 +57,12 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
                   <h3>{card.title}</h3>
                   <p>{card.description}</p>
                   <Link to={card.to}>Подробнее</Link>
+                  {isAuthenticated && userRole?.includes("ADMIN") && (
+                    <div className={style.adminControls}>
+                      <button onClick={() => setEditingIndex(index)}>Редактировать</button>
+                      <button onClick={() => handleDeleteProduct(index)}>Удалить</button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -63,6 +80,14 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
           </div>
         </div>
       </main>
+
+      {editingIndex !== null && (
+        <EditProductForm
+          product={cards[editingIndex]}
+          onSave={(updatedProduct) => handleEditProduct(editingIndex, updatedProduct)}
+          onCancel={() => setEditingIndex(null)}
+        />
+      )}
     </>
   );
 };

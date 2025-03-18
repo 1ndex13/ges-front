@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
 import style from "./Header.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { userStore } from "../../api/UserStore";
 
 export const Header = observer(() => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogout = () => {
+    userStore.logout(navigate); // Передаем navigate в logout
   };
 
   return (
@@ -27,7 +32,7 @@ export const Header = observer(() => {
           {userStore.isAuthenticated ? (
             <>
               <Link to="/profile">Профиль</Link>
-              <Link onClick={() => userStore.logout(navigate)}>Выход</Link>
+              <Link onClick={handleLogout}>Выход</Link>
             </>
           ) : (
             <Link to="/login">Вход</Link>
