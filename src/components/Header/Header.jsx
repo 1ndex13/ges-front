@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { observer } from "mobx-react";
 import style from "./Header.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { userStore } from "../../api/UserStore";
+import { userStore } from "../api/UserStore";
 
 export const Header = observer(() => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -13,7 +13,7 @@ export const Header = observer(() => {
   };
 
   const handleLogout = () => {
-    userStore.logout(navigate); // Передаем navigate в logout
+    userStore.logout(navigate); // Передача navigate в logout
   };
 
   return (

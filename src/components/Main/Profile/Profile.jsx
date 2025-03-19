@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { useNavigate } from "react-router-dom";
-import { userStore } from "../../../api/UserStore";
+import { userStore } from "../../api/UserStore";
 
 export const Profile = observer(() => {
   const navigate = useNavigate();

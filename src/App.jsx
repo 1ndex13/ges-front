@@ -12,7 +12,7 @@ import { Login } from "./components/Main/Login/Login";
 import { Profile } from "./components/Main/Profile/Profile";
 import { ForgotPassword } from "./components/Main/ForgotPassword/ForgotPassword";
 import { MyServices } from "./components/Main/MyServices/MyServices";
-import { userStore } from "./api/UserStore";
+import { userStore } from "./components/api/UserStore";
 import "./App.css";
 
 function App() {

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import style from "./Catalog.module.css";
+import { addProduct, updateProduct } from "../../api/api";// Импортируем функции API
 
 export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => {
   const [title, setTitle] = useState(product?.title || "");
@@ -7,17 +8,26 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
   const [imgSrc, setImgSrc] = useState(product?.imgSrc || "");
   const [to, setTo] = useState(product?.to || "");
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const updatedProduct = {
       title,
       description,
       imgSrc,
       to,
     };
-    if (product) {
-      onSave(updatedProduct);
-    } else {
-      onAddProduct(updatedProduct);
+
+    try {
+      if (product) {
+        // Если продукт существует, обновляем его
+        await updateProduct(product.id, updatedProduct);
+        onSave(updatedProduct); // Обновляем состояние в родительском компоненте
+      } else {
+        // Если продукта нет, добавляем новый
+        const newProduct = await addProduct(updatedProduct);
+        onAddProduct(newProduct); // Добавляем новый продукт в состояние родительского компонента
+      }
+    } catch (error) {
+      console.error("Ошибка при сохранении товара:", error);
     }
   };
 

@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 class UserStore {
   username = "";
@@ -9,9 +8,11 @@ class UserStore {
   confirmPassword = "";
   error = "";
   isAuthenticated = false;
+  roles = [];
 
   constructor() {
     makeAutoObservable(this);
+    this.loadUserFromLocalStorage(); // Восстановление состояния из localStorage
   }
 
   setUsername(username) {
@@ -38,52 +39,78 @@ class UserStore {
     this.isAuthenticated = isAuthenticated;
   }
 
+  setRoles(roles) {
+    this.roles = roles;
+  }
+
+  // Загрузка данных пользователя из localStorage
+  loadUserFromLocalStorage() {
+    const user = localStorage.getItem("user");
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      this.setIsAuthenticated(true);
+      this.setRoles(parsedUser.roles || []);
+      this.setUsername(parsedUser.username || "");
+      this.setEmail(parsedUser.email || "");
+    }
+  }
+
   async login(navigate) {
     try {
       const response = await axios.post("http://localhost:8080/api/auth/login", {
         username: this.username,
         password: this.password,
       });
-      console.log("Успешная авторизация:", response.data);
+      const data = response.data;
 
-      localStorage.setItem("user", JSON.stringify(response.data));
-      this.setIsAuthenticated(true);
-      navigate("/profile");
+      if (data && data.success) {
+        this.setIsAuthenticated(true);
+        this.setRoles(data.roles || []); // Исправлено: добавлено значение по умолчанию
+        localStorage.setItem("user", JSON.stringify(data)); // Сохранение данных в localStorage
+        navigate("/profile"); // Перенаправление на страницу профиля
+      } else {
+        this.setError("Неверный логин или пароль");
+      }
     } catch (err) {
-      this.setError("Неверный логин или пароль");
+      this.setError("Ошибка авторизации");
       console.error("Ошибка авторизации:", err);
     }
   }
 
-  async register() {
-    if (!this.validateForm()) {
-      return;
-    }
+  async register(navigate) {
+    if (!this.validateForm()) return; // Валидация формы перед отправкой
+
     try {
       const response = await axios.post("http://localhost:8080/api/auth/register", {
         username: this.username,
         email: this.email,
         password: this.password,
-        confirmPassword: this.confirmPassword,
       });
-      console.log("Успешная регистрация:", response.data);
-      navigate("/login");
-    } catch (err) {
-      if (err.response) {
-        if (err.response.status === 400) {
-          this.setError("Пользователь с таким именем или email уже существует");
-        } else {
-          this.setError("Ошибка регистрации");
-        }
+
+      if (response.data && response.data.success) {
+        // Очистка полей после успешной регистрации
+        this.setUsername("");
+        this.setEmail("");
+        this.setPassword("");
+        this.setConfirmPassword("");
+        this.setError("");
+        navigate("/login"); // Перенаправление на страницу логина
       } else {
-        this.setError("Ошибка сети или сервер недоступен");
+        this.setError("Ошибка регистрации");
       }
+    } catch (err) {
+      this.setError(
+        err.response?.status === 400
+          ? "Пользователь с таким именем или email уже существует"
+          : "Ошибка регистрации"
+      );
       console.error("Ошибка регистрации:", err);
     }
   }
 
+  // Валидация формы
   validateForm() {
-    if (!this.username || !this.email || !this.password || !this.confirmPassword) {
+    if (!this.username || !this.password || !this.confirmPassword) {
       this.setError("Все поля обязательны для заполнения");
       return false;
     }
@@ -102,10 +129,17 @@ class UserStore {
     return true;
   }
 
-  logout() {
-    localStorage.removeItem("user");
+  // Выход из системы
+  logout(navigate) {
+    localStorage.removeItem("user"); // Удаление данных из localStorage
     this.setIsAuthenticated(false);
-    navigate("/login");
+    this.setRoles([]);
+    this.setUsername("");
+    this.setEmail("");
+    this.setPassword("");
+    this.setConfirmPassword("");
+    this.setError("");
+    navigate("/login"); // Перенаправление на страницу логина
   }
 }
 
