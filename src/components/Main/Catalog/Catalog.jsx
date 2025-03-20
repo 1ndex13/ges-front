@@ -1,29 +1,59 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import style from "./Catalog.module.css";
 import { EditProductForm } from "./EditProductForm";
 import { useNavigate, Link } from "react-router-dom";
-import { cardsData } from "../../../Scripts/cardsData";
+import { getProducts, addProduct, updateProduct, deleteProduct } from "../../api/api"; // Импортируем функции API
 
 export const Catalog = ({ isAuthenticated, userRole }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [cards, setCards] = useState(cardsData);
+  const [cards, setCards] = useState([]); // Используем пустой массив вместо cardsData
   const [editingIndex, setEditingIndex] = useState(null);
   const cardsPerPage = 6;
 
-  const handleAddProduct = (newProduct) => {
-    setCards((prev) => [...prev, newProduct]); // Добавляем карточку с id от бэкенда
+  // Загрузка данных с бэкенда
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts();
+        setCards(data);
+      } catch (error) {
+        console.error("Ошибка при загрузке товаров:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const handleAddProduct = async (newProduct) => {
+    try {
+      const addedProduct = await addProduct(newProduct); // Отправляем запрос на бэкенд
+      setCards((prev) => [...prev, addedProduct]); // Обновляем локальное состояние
+    } catch (error) {
+      console.error("Ошибка при добавлении товара:", error);
+    }
   };
 
-  const handleDeleteProduct = (index) => {
-    setCards((prev) => prev.filter((_, i) => i !== index));
+  const handleDeleteProduct = async (index) => {
+    const productId = cards[index].id; // Предполагаем, что у карточки есть уникальный id
+    try {
+      await deleteProduct(productId); // Отправляем запрос на удаление на бэкенд
+      setCards((prev) => prev.filter((_, i) => i !== index)); // Обновляем локальное состояние
+    } catch (error) {
+      console.error("Ошибка при удалении товара:", error);
+    }
   };
 
-  const handleEditProduct = (index, updatedProduct) => {
-    setCards((prev) =>
-      prev.map((card, i) => (i === index ? { ...card, ...updatedProduct } : card))
-    );
-    setEditingIndex(null);
+  const handleEditProduct = async (index, updatedProduct) => {
+    const productId = cards[index].id; // Предполагаем, что у карточки есть уникальный id
+    try {
+      await updateProduct(productId, updatedProduct); // Отправляем запрос на обновление на бэкенд
+      setCards((prev) =>
+        prev.map((card, i) => (i === index ? { ...card, ...updatedProduct } : card))
+      ); // Обновляем локальное состояние
+      setEditingIndex(null);
+    } catch (error) {
+      console.error("Ошибка при обновлении товара:", error);
+    }
   };
 
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -45,7 +75,7 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
           <div className={style.cards}>
             {currentCards.map((card, index) => (
               <div
-                key={index}
+                key={card.id} // Используем уникальный id карточки
                 className={`${style.card} ${hoveredIndex === index ? style.flipped : ''}`}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}

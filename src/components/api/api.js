@@ -1,6 +1,23 @@
 import axios from "axios";
 
 // Добавление товара
+export const getProducts = async (product) => {
+  try {
+    const response = await axios.get("http://localhost:8080/api/products", product, {
+      auth: {
+        username: "admin",
+        password: "admin123",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при получении товара:", error);
+    throw error;
+  }
+};
+
+
+
 export const addProduct = async (product) => {
   try {
     const response = await axios.post("http://localhost:8080/api/products", product, {
@@ -30,3 +47,21 @@ export const updateProduct = async (id, product) => {
     throw error;
   }
 };
+
+export const deleteProduct = async (product) => {
+  try {
+    const response = await axios.post("http://localhost:8080/api/products", product, {
+      auth: {
+        username: "admin",
+        password: "admin123",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка при удалении товара:", error);
+    throw error;
+  }
+};
+
+
+
