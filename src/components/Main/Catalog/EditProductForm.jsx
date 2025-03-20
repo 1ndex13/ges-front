@@ -6,25 +6,18 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
   const [title, setTitle] = useState(product?.title || "");
   const [description, setDescription] = useState(product?.description || "");
   const [imgSrc, setImgSrc] = useState(product?.imgSrc || "");
-  const [to, setTo] = useState(product?.to || "");
+  const [targetUrl, setTargetUrl] = useState(product?.targetUrl || "");
 
   const handleSave = async () => {
-    const updatedProduct = {
-      title,
-      description,
-      imgSrc,
-      to,
-    };
-
+    const updatedProduct = { title, description, imgSrc, targetUrl };
     try {
       if (product) {
-        // Если продукт существует, обновляем его
+        console.log("Product ID:", product.id);
         await updateProduct(product.id, updatedProduct);
-        onSave(updatedProduct); // Обновляем состояние в родительском компоненте
+        onSave(updatedProduct);
       } else {
-        // Если продукта нет, добавляем новый
         const newProduct = await addProduct(updatedProduct);
-        onAddProduct(newProduct); // Добавляем новый продукт в состояние родительского компонента
+        onAddProduct(newProduct);
       }
     } catch (error) {
       console.error("Ошибка при сохранении товара:", error);
@@ -65,8 +58,8 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
           Ссылка на страницу:
           <input
             type="text"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
+            value={targetUrl}
+            onChange={(e) => setTargetUrl(e.target.value)}
             className={style.edit_form_input}
           />
         </label>

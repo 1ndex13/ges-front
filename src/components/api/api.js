@@ -1,14 +1,12 @@
 import axios from "axios";
 
-const API_URL = "/api/products"; // Используем относительный путь
-
 // Добавление товара
 export const addProduct = async (product) => {
   try {
-    const response = await axios.post(API_URL, product, {
+    const response = await axios.post("http://localhost:8080/api/products", product, {
       auth: {
-        username: "admin", // Логин администратора
-        password: "admin123", // Пароль администратора
+        username: "admin",
+        password: "admin123",
       },
     });
     return response.data;
@@ -18,10 +16,9 @@ export const addProduct = async (product) => {
   }
 };
 
-// Обновление товара
 export const updateProduct = async (id, product) => {
   try {
-    const response = await axios.put(`${"/api/products"}/${id}`, product, {
+    const response = await axios.put(`http://localhost:8080/api/products/${id}`, product, {
       auth: {
         username: "admin",
         password: "admin123",
