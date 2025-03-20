@@ -1,9 +1,9 @@
 import axios from "axios";
 
 // Добавление товара
-export const getProducts = async (product) => {
+export const getProducts = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/api/products", product, {
+    const response = await axios.get("http://localhost:8080/api/products", {
       auth: {
         username: "admin",
         password: "admin123",
@@ -33,9 +33,9 @@ export const addProduct = async (product) => {
   }
 };
 
-export const updateProduct = async (id, product) => {
+export const updateProduct = async (id, updatedProduct) => {
   try {
-    const response = await axios.put(`http://localhost:8080/api/products/${id}`, product, {
+    const response = await axios.put(`http://localhost:8080/api/products/${id}`,updatedProduct, {
       auth: {
         username: "admin",
         password: "admin123",
@@ -48,9 +48,9 @@ export const updateProduct = async (id, product) => {
   }
 };
 
-export const deleteProduct = async (product) => {
+export const deleteProduct = async (productId) => {
   try {
-    const response = await axios.post("http://localhost:8080/api/products", product, {
+    const response = await axios.delete(`http://localhost:8080/api/products/${productId}`, {
       auth: {
         username: "admin",
         password: "admin123",
