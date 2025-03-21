@@ -25,6 +25,7 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
   };
 
   return (
+    <div className={style.container}>
     <div className={style.edit_form_container}>
       <h2>{product ? "Редактирование карточки" : "Добавление карточки"}</h2>
       <form className="edit-form">
@@ -75,5 +76,6 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
         </div>
       </form>
     </div>
+  </div>
   );
 };

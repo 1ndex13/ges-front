@@ -1,19 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
 
-.container {
+/* Общие стили */
+* {
     font-family: "Oswald", sans-serif;
+}
+
+.container {
     width: 1440px;
     margin: 0 auto;
 }
 
 .Actually {
     font-size: 24px;
-    margin-top: 30px;
+    margin: 30px 0 10px;
     font-weight: 300;
-    margin-bottom: 10px;
 }
 
-/* Класс для контейнера карточек */
 .cards {
     display: flex;
     justify-content: space-between;
@@ -21,15 +23,14 @@
     margin-bottom: 30px;
 }
 
-/* Основные стили для карточек */
 .card {
+    margin-top: 20px;
     position: relative;
-    width: 450px; /* Ширина */
-    height: 260px; /* Высота */
-    margin-bottom: 20px; /* Отступ между карточками */
+    width: 450px;
+    height: 260px;
+    margin-bottom: 20px;
 }
 
-/* Контейнеры для лицевой и обратной сторон */
 .card .front,
 .card .back {
     position: absolute;
@@ -37,32 +38,31 @@
     left: 0;
     width: 100%;
     height: 100%;
-    backface-visibility: hidden; /* Скрыть обратную сторону при повороте */
+    backface-visibility: hidden;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: transform 0.99s cubic-bezier(0.4, 0, 0.2, 1), /* Увеличенное время и плавная кривая */
-                opacity 0.99s cubic-bezier(0.4, 0, 0.2, 1); /* Увеличенное время и плавная кривая */
+    transition: transform 0.99s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.99s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Лицевая сторона содержит изображение */
 .front img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Используйте contain вместо cover */
+    object-fit: contain;
 }
 
-/* Обратная сторона */
 .back {
     background-color: #f9f9f9;
     padding-top: 30px;
     text-align: center;
-    transform: rotateY(180deg); /* Изначально скрыта */
+    transform: rotateY(180deg);
+    cursor: pointer;
+    opacity: 0;
+    z-index: 0;
 }
 
-/* Стили для перевернутой карточки */
 .flipped .front {
     transform: rotateY(180deg);
     opacity: 0.5;
@@ -70,23 +70,14 @@
 
 .flipped .back {
     transform: rotateY(0deg);
-    opacity: 1; /* Полная видимость */
-    z-index: 1;
-}
-
-/* Изначально видимая сторона */
-.front {
-    transform: rotateY(0deg);
     opacity: 1;
     z-index: 1;
 }
 
-/* Изначально скрытая сторона */
-.back {
-    cursor: pointer;
-    transform: rotateY(180deg);
-    opacity: 0;
-    z-index: 0;
+.front {
+    transform: rotateY(0deg);
+    opacity: 1;
+    z-index: 1;
 }
 
 .back h3 {
@@ -109,19 +100,37 @@
     text-decoration: underline;
 }
 
-/* Пагинация */
+/* Пагинация и кнопки */
 .pagination {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
 
+.pagination button,
+.addServiceButton,
+.editButton,
+.deleteButton,
+.edit_form_save,
+.edit_form_cancel {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
 .pagination button {
     margin: 0 5px;
-    padding: 5px 10px;
     border: 1px solid #aab9c9;
     background-color: #fff;
-    cursor: pointer;
+    font-weight: 300;
+}
+
+.pagination button:hover {
+    background-color: #f0f0f0;
 }
 
 .pagination button.active {
@@ -130,93 +139,125 @@
     border-color: #aab9c9;
 }
 
+.addServiceButton {
+    background-color: #29a5d6;
+    color: #fff;
+}
 
+.addServiceButton:hover {
+    background-color: #1e87b3;
+    transform: translateY(-2px);
+}
 
+.addServiceButton:active,
+.editButton:active,
+.deleteButton:active,
+.edit_form_save:active,
+.edit_form_cancel:active {
+    transform: translateY(0);
+}
 
+.adminControls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.editButton {
+    background-color: #aab9c9;
+    color: #fff;
+}
+
+.editButton:hover {
+    background-color: #8a9cb3;
+    transform: translateY(-2px);
+}
+
+.deleteButton {
+    background-color: #d9534f;
+    color: #fff;
+}
+
+.deleteButton:hover {
+    background-color: #c9302c;
+    transform: translateY(-2px);
+}
+
+/* Форма редактирования */
 .edit_form_container {
-    font-family: "Oswald", sans-serif;
-    width: 450px; /* Соответствует ширине карточек в Catalog */ /* Центрируем и добавляем отступ снизу как у .cards */
-    background-color: #f9f9f9; /* Фон как у обратной стороны карточки */
-    border-radius: 10px; /* Скругленные углы как у карточек */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Легкая тень для глубины */
-  }
-  
-  .edit_form_container h2 {
-    font-size: 24px;
-    font-weight: 400; /* Легкий вес как у заголовков карточек */
-    margin-bottom: 20px;
-  }
-  
-  .edit_form {
+    width: 450px;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.edit_form_container h2 {
+    font-size: 18px;
+    font-weight: 250;
+    margin: 0 0 10px;
+}
+
+.edit_form {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Отступ между полями */
-  }
-  
-  .edit_form_label {
+    gap: 15px;
+}
+
+.edit_form_label {
     display: flex;
     flex-direction: column;
-    font-weight: 300; /* Легкий вес как у текста в карточках */
-    font-size: 16px;
-  }
-  
-  .edit_form_input,
-  .edit_form_textarea {
-    font-family: "Oswald", sans-serif;
-    width: 100%;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.edit_form_input,
+.edit_form_textarea {
+    width: 430px;
     padding: 8px 12px;
     margin-top: 5px;
-    border: 1px solid #aab9c9; /* Граница как у кнопок пагинации */
+    border: 1px solid #aab9c9;
     border-radius: 5px;
     font-size: 16px;
     font-weight: 300;
     background-color: #fff;
     transition: border-color 0.3s ease;
-  }
-  
-  .edit_form_input:focus,
-  .edit_form_textarea:focus {
-    border-color: #aab9c9; /* Цвет акцента как у ссылок */
+}
+
+.edit_form_input:focus,
+.edit_form_textarea:focus {
+    border-color: #29a5d6;
     outline: none;
-  }
-  
-  .edit_form_textarea {
-    resize: vertical; /* Позволяем изменять высоту, но не ширину */
-    min-height: 80px; /* Минимальная высота для удобства ввода */
-  }
-  
-  .edit_form_buttons {
+}
+
+.edit_form_textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.edit_form_buttons {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-  }
-  
-  .edit_form_save,
-  .edit_form_cancel {
-    font-family: "Oswald", sans-serif;
-    padding: 8px 20px;
-    border: 1px solid #aab9c9; /* Как у кнопок пагинации */
-    border-radius: 5px;
-    background-color: #fff;
-    font-size: 16px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .edit_form_save {
-    background-color: #aab9c9; /* Основной цвет акцента */
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.edit_form_save {
+    background-color: #29a5d6;
     color: #fff;
-  }
-  
-  .edit_form_save:hover {
-    background-color: #aab9c9; /* Темнее при наведении */
-  }
-  
-  .edit_form_cancel {
-    background-color: #fff;
-  }
-  
-  .edit_form_cancel:hover {
-    background-color: #f0f0f0; /* Легкий серый фон при наведении */
-  }
+}
+
+.edit_form_save:hover {
+    background-color: #1e87b3;
+    transform: translateY(-2px);
+}
+
+.edit_form_cancel {
+    background-color: #d9534f;
+    color: #fff;
+}
+
+.edit_form_cancel:hover {
+    background-color: #c9302c;
+    transform: translateY(-2px);
+}

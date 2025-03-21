@@ -1,15 +1,16 @@
 import React from "react";
 import style from "./MyServices.module.css";
+import { useServices } from "../Catalog/ServicesContext";// Убедитесь, что путь правильный
 
-export const MyServices = ({ services, removeService }) => {
+export const MyServices = () => {
+  const { services, removeService } = useServices();
+
   const handlePayment = (serviceTitle) => {
-    // Логика для оплаты услуги
     alert(`Оплата услуги: ${serviceTitle}`);
   };
 
   const handleDelete = (serviceTitle) => {
-    // Логика для удаления услуги
-    removeService(serviceTitle); // Удаляем услугу по названию
+    removeService(serviceTitle);
     alert(`Услуга "${serviceTitle}" удалена`);
   };
 

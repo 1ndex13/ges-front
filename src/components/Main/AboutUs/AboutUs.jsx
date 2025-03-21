@@ -19,17 +19,16 @@ export const AboutUs = () => {
       
       <div className={style.info_cards}>
         <div className={style.info_card}>
-          <img src="./sbit.png" alt="" />
+          <img src="./aboutus.png" alt="" />
           <h3>О «Global Energy Solution»</h3>
           <p>
             Основные виды деятельности компании — поиск месторождений
-            углеводородов, добыча и реализация нефти и газа, а также
-            производство и сбыт нефтепродуктов
+            углеводородов, добыча и реализация нефти и газа
           </p>
           <h6>Узнать больше</h6>
         </div>
         <div className={style.info_card}>
-          <img src="./public/mission-and-strategy.png" alt="" />
+          <img src="./people.png" alt="" />
           <h3>Миссия и стратегия</h3>
           <p>
             «Global Energy Solution» создает ресурсы для будущего, обогащая мир энергией,
@@ -38,14 +37,12 @@ export const AboutUs = () => {
           <h6>Узнать больше</h6>
         </div>
         <div className={style.info_card}>
-          <img src="./public/energy-in-people.png" alt="" />
+          <img src="./energy.png" alt="" />
           <h3>Энергия в людях</h3>
           <p>
             Сегодня в «Global Energy Solution» работает более 80 тысяч сотрудников.
-            Благодаря им развиваются высокотехнологичные проекты по добыче и
-            переработке углеводородов, производство становится эффективнее и
-            экологичнее, создаются новые российские технологии и востребованные
-            продукты
+            Благодаря которым производство становится эффективнее и
+            экологичнее
           </p>
           <h6>Узнать больше</h6>
         </div>

@@ -13,6 +13,7 @@ import { Profile } from "./components/Main/Profile/Profile";
 import { ForgotPassword } from "./components/Main/ForgotPassword/ForgotPassword";
 import { MyServices } from "./components/Main/MyServices/MyServices";
 import { userStore } from "./components/api/UserStore";
+import { ServicesProvider } from "./components/Main/Catalog/ServicesContext";
 import "./App.css";
 
 function App() {
@@ -49,7 +50,7 @@ function App() {
   }
 
   return (
-    <>
+    <><ServicesProvider>
       <Header isAuthenticated={userStore.isAuthenticated} onLogout={handleLogout} />
       <Routes>
         <Route path="/about" element={<AboutUs />} />
@@ -75,6 +76,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
       <Footer />
+      </ServicesProvider>
     </>
   );
 }

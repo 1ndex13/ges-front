@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import style from "./Catalog.module.css";
 import { EditProductForm } from "./EditProductForm";
-import { useNavigate, Link } from "react-router-dom";
-import { getProducts, addProduct, updateProduct, deleteProduct } from "../../api/api"; // Импортируем функции API
+import { getProducts, addProduct, updateProduct, deleteProduct } from "../../api/api";
+import { useServices } from "./ServicesContext";
 
 export const Catalog = ({ isAuthenticated, userRole }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [cards, setCards] = useState([]); // Используем пустой массив вместо cardsData
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [cards, setCards] = useState([]);
+  const [editingProduct, setEditingProduct] = useState(null); // null - нет формы, объект - редактирование, undefined - добавление
   const cardsPerPage = 6;
+  const { addService } = useServices();
 
-  // Загрузка данных с бэкенда
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -26,34 +26,45 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
 
   const handleAddProduct = async (newProduct) => {
     try {
-      const addedProduct = await addProduct(newProduct); // Отправляем запрос на бэкенд
-      setCards((prev) => [...prev, addedProduct]); // Обновляем локальное состояние
+      const addedProduct = await addProduct(newProduct);
+      setCards((prev) => [...prev, addedProduct]);
+      setEditingProduct(null); // Закрываем форму после добавления
     } catch (error) {
       console.error("Ошибка при добавлении товара:", error);
     }
   };
 
   const handleDeleteProduct = async (index) => {
-    const productId = cards[index].id; // Предполагаем, что у карточки есть уникальный id
+    const productId = cards[index].id;
     try {
-      await deleteProduct(productId); // Отправляем запрос на удаление на бэкенд
-      setCards((prev) => prev.filter((_, i) => i !== index)); // Обновляем локальное состояние
+      await deleteProduct(productId);
+      setCards((prev) => prev.filter((_, i) => i !== index));
     } catch (error) {
       console.error("Ошибка при удалении товара:", error);
     }
   };
 
-  const handleEditProduct = async (index, updatedProduct) => {
-    const productId = cards[index].id; // Предполагаем, что у карточки есть уникальный id
+  const handleEditProduct = async (updatedProduct) => {
+    const index = cards.findIndex(card => card.id === editingProduct.id);
+    const productId = cards[index].id;
     try {
-      await updateProduct(productId, updatedProduct); // Отправляем запрос на обновление на бэкенд
+      await updateProduct(productId, updatedProduct);
       setCards((prev) =>
         prev.map((card, i) => (i === index ? { ...card, ...updatedProduct } : card))
-      ); // Обновляем локальное состояние
-      setEditingIndex(null);
+      );
+      setEditingProduct(null); // Закрываем форму после редактирования
     } catch (error) {
       console.error("Ошибка при обновлении товара:", error);
     }
+  };
+
+  const handleAddToServices = (card) => {
+    addService({
+      id: card.id,
+      title: card.title,
+      description: card.description,
+      imgSrc: card.imgSrc,
+    });
   };
 
   const indexOfLastCard = currentPage * cardsPerPage;
@@ -69,13 +80,18 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
           <div className={style.Actually}>Наша продукция</div>
 
           {isAuthenticated && userRole?.includes("ADMIN") && (
-            <EditProductForm onAddProduct={handleAddProduct} />
+            <button
+              onClick={() => setEditingProduct(undefined)} // Открываем форму добавления
+              className={style.addServiceButton}
+            >
+              Добавить продукт
+            </button>
           )}
 
           <div className={style.cards}>
             {currentCards.map((card, index) => (
               <div
-                key={card.id} // Используем уникальный id карточки
+                key={card.id}
                 className={`${style.card} ${hoveredIndex === index ? style.flipped : ''}`}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
@@ -86,11 +102,26 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
                 <div className={style.back}>
                   <h3>{card.title}</h3>
                   <p>{card.description}</p>
-                  <Link to={card.to}>Подробнее</Link>
+                  <button
+                    onClick={() => handleAddToServices(card)}
+                    className={style.addServiceButton}
+                  >
+                    Добавить услугу
+                  </button>
                   {isAuthenticated && userRole?.includes("ADMIN") && (
                     <div className={style.adminControls}>
-                      <button onClick={() => setEditingIndex(index)}>Редактировать</button>
-                      <button onClick={() => handleDeleteProduct(index)}>Удалить</button>
+                      <button
+                        onClick={() => setEditingProduct(card)} // Открываем форму редактирования
+                        className={style.editButton}
+                      >
+                        Редактировать
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProduct(index)}
+                        className={style.deleteButton}
+                      >
+                        Удалить
+                      </button>
                     </div>
                   )}
                 </div>
@@ -102,7 +133,7 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
               <button
                 key={i + 1}
                 onClick={() => paginate(i + 1)}
-                className={currentPage === i + 1 ? style.active : ''}
+                className={currentPage === i + 1 ? style.active : style.pageButton}
               >
                 {i + 1}
               </button>
@@ -111,12 +142,15 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
         </div>
       </main>
 
-      {editingIndex !== null && (
-        <EditProductForm
-          product={cards[editingIndex]}
-          onSave={(updatedProduct) => handleEditProduct(editingIndex, updatedProduct)}
-          onCancel={() => setEditingIndex(null)}
-        />
+      {editingProduct !== null && (
+        <div className={style.modalOverlay}>
+          <EditProductForm
+            product={editingProduct === undefined ? null : editingProduct} // null для добавления, объект для редактирования
+            onSave={editingProduct === undefined ? handleAddProduct : handleEditProduct}
+            onCancel={() => setEditingProduct(null)}
+            onAddProduct={handleAddProduct}
+          />
+        </div>
       )}
     </>
   );

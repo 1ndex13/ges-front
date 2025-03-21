@@ -5,8 +5,7 @@ export const cardsData = [
       description: "«Global Energy Solution» предоставляет комплексные услуги по геологоразведке, включая сейсмические исследования и оценку месторождений полезных ископаемых.",
       imgSrc: "/geo.png",
       price: "1 000 000",
-      to: "/catalog/1",
-      benefits: ["Точные расчеты", "Эффективная работа", "Минимизация воздействия на окружающую среду"]
+      url: "https://ltdfoto.ru/images/2025/03/21/geo.png",
     },
     {
       id: 2,
@@ -15,7 +14,7 @@ export const cardsData = [
       imgSrc: "/oilgas.png",
       price: "2 500 000",
       to: "/catalog/2",
-      benefits: ["Использование современных буровых установок", "Высокая скорость выполнения работ","Минимизация воздействия на окружающую среду"]
+      url: "https://ltdfoto.ru/image/slNVIu",
     },
     {
       id: 3,
@@ -24,7 +23,7 @@ export const cardsData = [
       imgSrc: "/kar.png",
       price: "1 800 000",
       to: "/catalog/3",
-      benefits: ["Точный анализ пластов", "Использование современного оборудования", "Оперативное предоставление отчетов"]
+      url: "https://ltdfoto.ru/image/slNCfH",
     },
     {
       id: 4,
@@ -33,7 +32,7 @@ export const cardsData = [
       imgSrc: "/bur.png",
       price: "2 500 000",
       to: "/catalog/4",
-      benefits: ["Использование современных буровых установок", "Высокая скорость выполнения работ", "Минимизация воздействия на окружающую среду"]
+      url: "https://ltdfoto.ru/image/slNFqJ",
     },
     {
       id: 5,
@@ -42,7 +41,7 @@ export const cardsData = [
       imgSrc: "/water.png",
       price: "300 000",
       to: "/catalog/5",
-      benefits: ["Эффективная защита от коррозии", "Увеличение срока службы оборудования","Соответствие международным стандартам"]
+      url: "https://ltdfoto.ru/image/slNqmL",
     },
     {
       id: 6,
@@ -51,7 +50,7 @@ export const cardsData = [
       imgSrc: "/peno.png",
       price: "200 000",
       to: "/catalog/6",
-      benefits: ["Высокая эффективность", "Безопасность для оборудования", "Широкий спектр применения"]
+      url: "https://ltdfoto.ru/image/slWArk",
     },
     {
       id: 7,
@@ -60,7 +59,7 @@ export const cardsData = [
       imgSrc: "/bunker.png",
       price: "1 500 000",
       to: "/catalog/7",
-      benefits: ["Современные технологии хранения", "Высокий уровень безопасности", "Оптимизация логистики"]
+      url: "https://ltdfoto.ru/image/slWEPM",
     },
     {
       id: 8,
@@ -69,7 +68,7 @@ export const cardsData = [
       imgSrc: "/ships.png",
       price: "1 000 000",
       to: "/catalog/8",
-      benefits: ["Высокое качество топлива", "Оперативная доставка", "Соблюдение экологических стандартов"]
+      url: "https://ltdfoto.ru/image/slWeXf",
     },
     {
       id: 9,
@@ -78,7 +77,7 @@ export const cardsData = [
       imgSrc: "/products.png",
       price: "800 000",
       to: "/catalog/9",
-      benefits: ["Высокое качество продукции", "Широкий ассортимент битумов", "Доставка по всей России"]
+      url: "https://ltdfoto.ru/image/slWwpn",
     },
     {
       id: 10,
@@ -87,7 +86,7 @@ export const cardsData = [
       imgSrc: "/money.png",
       price: "500 000",
       to: "/catalog/10",
-      benefits: ["Оптимизация затрат", "Комплексный подход", "Опытные аналитики"]
+      url: "https://ltdfoto.ru/image/slWIWY",
     },
     {
       id: 11,
@@ -96,7 +95,7 @@ export const cardsData = [
       imgSrc: "/box.png",
       price: "1 200 000",
       to: "/catalog/11",
-      benefits: ["Энергонезависимость", "Высокая надежность", "Экологичность"]
+      url: "https://ltdfoto.ru/image/slWSkh",
     },
     {
       id: 12,
@@ -105,6 +104,6 @@ export const cardsData = [
       imgSrc: "/truba.png",
       price: "2 000 000", 
       to: "/catalog/12",
-      benefits: ["Современные технологии", "Минимизация потерь", "Безопасность и надежность"]
+      url: "https://ltdfoto.ru/image/slWKI3",
     },
   ];

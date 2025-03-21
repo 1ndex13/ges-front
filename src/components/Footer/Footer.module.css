@@ -12,6 +12,9 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap; /* Перенос блоков на новую строку */
+  }
+
+  .container h3,p{
     cursor: pointer;
   }
   

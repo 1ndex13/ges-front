@@ -46,7 +46,7 @@
 .contactBlock {
   padding: 20px;
   border-radius: 10px;
-  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  border: 1px solid #cacaca;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -85,12 +85,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(145deg, #ffffff, #f0f0f0);
   padding: 15px;
   border-radius: 10px;
   text-decoration: none;
   color: #333;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #cacaca;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
