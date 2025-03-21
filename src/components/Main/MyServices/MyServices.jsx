@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import style from "./MyServices.module.css";
-import { useServices } from "../Catalog/ServicesContext";// Убедитесь, что путь правильный
+import { useServices } from "../Catalog/ServicesContext"; // Убедитесь, что путь правильный
+import { ModalOrder } from "./ModalOrder";
+import { Modal } from "react-bootstrap";
+
 
 export const MyServices = () => {
   const { services, removeService } = useServices();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   const handlePayment = (serviceTitle) => {
-    alert(`Оплата услуги: ${serviceTitle}`);
+    setSelectedService(serviceTitle);
+    setIsModalOpen(true);
   };
 
   const handleDelete = (serviceTitle) => {
     removeService(serviceTitle);
     alert(`Услуга "${serviceTitle}" удалена`);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedService(null);
   };
 
   return (
@@ -25,14 +36,14 @@ export const MyServices = () => {
             <li key={index} className={style.serviceItem}>
               <img src={service.imgSrc} alt={service.title} />
               <div className={style.serviceContent}>
-                <h1>{service.title}</h1>
+                <h3>{service.title}</h3>
               </div>
               <div className={style.serviceActions}>
                 <button
                   className={style.payButton}
                   onClick={() => handlePayment(service.title)}
                 >
-                  Оплатить
+                  Оставить заявку
                 </button>
                 <button
                   className={style.deleteButton}
@@ -45,6 +56,12 @@ export const MyServices = () => {
           ))}
         </ul>
       )}
+
+      <ModalOrder
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        serviceTitle={selectedService}
+      />
     </div>
   );
 };

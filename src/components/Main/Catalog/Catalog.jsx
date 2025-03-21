@@ -103,7 +103,10 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
                   <h3>{card.title}</h3>
                   <p>{card.description}</p>
                   <button
-                    onClick={() => handleAddToServices(card)}
+
+                    onClick={() => {
+                      handleAddToServices(card);
+                    }}  
                     className={style.addServiceButton}
                   >
                     Добавить услугу
