@@ -4,11 +4,13 @@ import { EditProductForm } from "./EditProductForm";
 import { getProducts, addProduct, updateProduct, deleteProduct } from "../../api/api";
 import { useServices } from "./ServicesContext";
 
-export const Catalog = ({ isAuthenticated, userRole }) => {
+export const Catalog = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [cards, setCards] = useState([]);
-  const [editingProduct, setEditingProduct] = useState(null); // null - нет формы, объект - редактирование, undefined - добавление
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState([]);
   const cardsPerPage = 6;
   const { addService } = useServices();
 
@@ -21,6 +23,32 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
         console.error("Ошибка при загрузке товаров:", error);
       }
     };
+
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/check', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await response.json();
+        console.log('Auth data:', data);
+        if (data.success) {
+          setIsAuthenticated(true);
+          setUserRole(data.roles || []);
+          console.log('User roles set to:', data.roles);
+        } else {
+          setIsAuthenticated(false);
+          setUserRole([]);
+          console.log('Auth failed:', data.message);
+        }
+      } catch (error) {
+        console.error("Ошибка проверки аутентификации:", error);
+        setIsAuthenticated(false);
+        setUserRole([]);
+      }
+    };
+
+    checkAuth();
     fetchProducts();
   }, []);
 
@@ -28,7 +56,7 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
     try {
       const addedProduct = await addProduct(newProduct);
       setCards((prev) => [...prev, addedProduct]);
-      setEditingProduct(null); // Закрываем форму после добавления
+      setEditingProduct(null);
     } catch (error) {
       console.error("Ошибка при добавлении товара:", error);
     }
@@ -52,7 +80,7 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
       setCards((prev) =>
         prev.map((card, i) => (i === index ? { ...card, ...updatedProduct } : card))
       );
-      setEditingProduct(null); // Закрываем форму после редактирования
+      setEditingProduct(null);
     } catch (error) {
       console.error("Ошибка при обновлении товара:", error);
     }
@@ -79,9 +107,9 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
         <div className={style.container}>
           <div className={style.Actually}>Наша продукция</div>
 
-          {isAuthenticated && userRole?.includes("ADMIN") && (
+          {isAuthenticated && userRole.includes("ADMIN") && (
             <button
-              onClick={() => setEditingProduct(undefined)} // Открываем форму добавления
+              onClick={() => setEditingProduct(undefined)}
               className={style.addServiceButton}
             >
               Добавить продукт
@@ -103,18 +131,15 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
                   <h3>{card.title}</h3>
                   <p>{card.description}</p>
                   <button
-
-                    onClick={() => {
-                      handleAddToServices(card);
-                    }}  
+                    onClick={() => handleAddToServices(card)}
                     className={style.addServiceButton}
                   >
                     Добавить услугу
                   </button>
-                  {isAuthenticated && userRole?.includes("ADMIN") && (
+                  {isAuthenticated && userRole.includes("ADMIN") && (
                     <div className={style.adminControls}>
                       <button
-                        onClick={() => setEditingProduct(card)} // Открываем форму редактирования
+                        onClick={() => setEditingProduct(card)}
                         className={style.editButton}
                       >
                         Редактировать
@@ -148,7 +173,7 @@ export const Catalog = ({ isAuthenticated, userRole }) => {
       {editingProduct !== null && (
         <div className={style.modalOverlay}>
           <EditProductForm
-            product={editingProduct === undefined ? null : editingProduct} // null для добавления, объект для редактирования
+            product={editingProduct === undefined ? null : editingProduct}
             onSave={editingProduct === undefined ? handleAddProduct : handleEditProduct}
             onCancel={() => setEditingProduct(null)}
             onAddProduct={handleAddProduct}
