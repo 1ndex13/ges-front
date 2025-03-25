@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import axios from "axios";
+import axiosInstance from "./axiosConfig"; // Импортируйте настроенный axios
 
 class UserStore {
   username = "";
@@ -12,7 +12,7 @@ class UserStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.loadUserFromLocalStorage(); // Восстановление состояния из localStorage
+    this.loadUserFromLocalStorage(); // Восстановление состояния (будет обновлено ниже)
   }
 
   setUsername(username) {
@@ -43,21 +43,40 @@ class UserStore {
     this.roles = roles;
   }
 
-  // Загрузка данных пользователя из localStorage
+  // Загрузка данных пользователя (теперь из cookie, а не localStorage)
   loadUserFromLocalStorage() {
-    const user = localStorage.getItem("user");
-    if (user) {
-      const parsedUser = JSON.parse(user);
-      this.setIsAuthenticated(true);
-      this.setRoles(parsedUser.roles || []);
-      this.setUsername(parsedUser.username || "");
-      this.setEmail(parsedUser.email || "");
+    // Поскольку токен теперь в cookie (HttpOnly), мы не можем напрямую его прочитать
+    // Вместо этого запросим статус авторизации у бэкенда
+    this.checkAuthStatus();
+  }
+
+  // Проверка статуса авторизации
+  async checkAuthStatus() {
+    try {
+      const response = await axiosInstance.get('/api/auth/check'); // Эндпоинт для проверки авторизации (нужен на бэкенде)
+      if (response.data.success) {
+        this.setIsAuthenticated(true);
+        this.setRoles(response.data.roles || []);
+        this.setUsername(response.data.username || "");
+        this.setEmail(response.data.email || "");
+      } else {
+        this.setIsAuthenticated(false);
+        this.setRoles([]);
+        this.setUsername("");
+        this.setEmail("");
+      }
+    } catch (err) {
+      this.setIsAuthenticated(false);
+      this.setRoles([]);
+      this.setUsername("");
+      this.setEmail("");
+      console.error("Ошибка проверки авторизации:", err);
     }
   }
 
   async login(navigate) {
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/login", {
+      const response = await axiosInstance.post("/api/auth/login", {
         username: this.username,
         password: this.password,
       });
@@ -65,9 +84,10 @@ class UserStore {
 
       if (data && data.success) {
         this.setIsAuthenticated(true);
-        this.setRoles(data.roles || []); // Исправлено: добавлено значение по умолчанию
-        localStorage.setItem("user", JSON.stringify(data)); // Сохранение данных в localStorage
-        navigate("/profile"); // Перенаправление на страницу профиля
+        this.setRoles(data.roles || []);
+        this.setUsername(data.username || ""); // Обновляем данные пользователя
+        this.setEmail(data.email || ""); // Если email возвращается
+        navigate("/profile");
       } else {
         this.setError("Неверный логин или пароль");
       }
@@ -78,23 +98,22 @@ class UserStore {
   }
 
   async register(navigate) {
-    if (!this.validateForm()) return; // Валидация формы перед отправкой
+    if (!this.validateForm()) return;
 
     try {
-      const response = await axios.post("http://localhost:8080/api/auth/register", {
+      const response = await axiosInstance.post("/api/auth/register", {
         username: this.username,
         email: this.email,
         password: this.password,
       });
 
       if (response.data && response.data.success) {
-        // Очистка полей после успешной регистрации
         this.setUsername("");
         this.setEmail("");
         this.setPassword("");
         this.setConfirmPassword("");
         this.setError("");
-        navigate("/login"); // Перенаправление на страницу логина
+        navigate("/login");
       } else {
         this.setError("Ошибка регистрации");
       }
@@ -128,10 +147,9 @@ class UserStore {
     }
     return true;
   }
-
-  // Выход из системы
   logout(navigate) {
-    localStorage.removeItem("user"); // Удаление данных из localStorage
+    // Очистка состояния, cookie удалит бэкенд
+
     this.setIsAuthenticated(false);
     this.setRoles([]);
     this.setUsername("");
@@ -139,7 +157,9 @@ class UserStore {
     this.setPassword("");
     this.setConfirmPassword("");
     this.setError("");
-    navigate("/login"); // Перенаправление на страницу логина
+    navigate("/login");
+    // Запрос на logout на бэкенде (если реализован)
+    axiosInstance.post('/api/auth/logout').catch(err => console.error("Ошибка выхода:", err));
   }
 }
 

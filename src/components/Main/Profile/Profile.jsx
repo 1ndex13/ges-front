@@ -21,8 +21,6 @@ export const Profile = observer(() => {
   return (
     <div>
       <h1>Профиль</h1>
-      <p>Логин: {user.username}</p>
-      <p>Email: {user.email}</p>
     </div>
   );
 });
