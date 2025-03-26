@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { observer } from "mobx-react";
 import style from "./Header.module.css";
 import { Link, useNavigate } from "react-router-dom";
-import { userStore } from "../api/UserStore";
+import { userStore } from "../../api/UserStore";
+
 
 export const Header = observer(() => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -13,8 +14,11 @@ export const Header = observer(() => {
   };
 
   const handleLogout = () => {
-    userStore.logout(navigate); // Передача navigate в logout
+    userStore.logout(navigate);
   };
+
+  // Проверка роли администратора
+  const isAdmin = userStore.roles.includes("ADMIN");
 
   return (
     <header>
@@ -31,7 +35,11 @@ export const Header = observer(() => {
           <Link to="/contacts">Контакты</Link>
           {userStore.isAuthenticated ? (
             <>
-              <Link to="/profile">Профиль</Link>
+              {isAdmin ? (
+                <Link to="/admin/users">Пользователи</Link>
+              ) : (
+                <Link to="/profile">Профиль</Link>
+              )}
               <Link onClick={handleLogout}>Выход</Link>
             </>
           ) : (

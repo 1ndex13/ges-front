@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom"; // Добавляем useNavigate
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom"; // Добавляем useNavigate
 import { Header } from "./components/Header/Header";
 import { FullCard } from "./components/Main/CatalogCard/FullCard";
 import { MainContent } from "./components/Main/MainContent/MainContent";
@@ -12,9 +12,9 @@ import { Login } from "./components/Main/Login/Login";
 import { Profile } from "./components/Main/Profile/Profile";
 import { ForgotPassword } from "./components/Main/ForgotPassword/ForgotPassword";
 import { MyServices } from "./components/Main/MyServices/MyServices";
-import { userStore } from "./components/api/UserStore";
+import { userStore } from "./api/UserStore";
 import { ServicesProvider } from "./components/Main/Catalog/ServicesContext";
-import "./App.css";
+import { AdminUsers } from "./components/Main/Admin/AdminUsers";
 
 function App() {
   const [myServices, setMyServices] = useState([]);
@@ -44,7 +44,6 @@ function App() {
     setMyServices((prev) => [...prev, service]);
   };
 
-  // Пока идет загрузка, показываем индикатор (или ничего)
   if (isLoading) {
     return <div>Загрузка...</div>;
   }
@@ -64,6 +63,14 @@ function App() {
           }
         />
         <Route
+          path="/admin/users"
+          element={
+            userStore.roles.includes("ADMIN") ?
+              <AdminUsers /> :
+              <Navigate to="/" />
+          }
+        />
+        <Route
           path="/catalog/:id"
           element={<FullCard isAuthenticated={userStore.isAuthenticated} addService={addService} />}
         />
@@ -76,7 +83,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
       <Footer />
-      </ServicesProvider>
+    </ServicesProvider>
     </>
   );
 }

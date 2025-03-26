@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import style from "./Register.module.css";
 import { Link, useNavigate } from 'react-router-dom';
-import { userStore } from "../../api/UserStore";
+import { userStore } from "../../../api/UserStore";
 
 export const Register = observer(() => {
   const navigate = useNavigate(); // Получаем функцию navigate

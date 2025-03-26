@@ -1,6 +1,6 @@
 import { useState } from "react";
 import style from "./Catalog.module.css";
-import { addProduct, updateProduct } from "../../api/api";// Импортируем функции API
+import { addProduct, updateProduct } from "../../../api/api";
 
 export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => {
   const [title, setTitle] = useState(product?.title || "");

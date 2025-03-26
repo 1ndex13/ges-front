@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import style from "./Catalog.module.css";
 import { EditProductForm } from "./EditProductForm";
-import { getProducts, addProduct, updateProduct, deleteProduct } from "../../api/api";
+import { getProducts, addProduct, updateProduct, deleteProduct } from "../../../api/api"
 import { useServices } from "./ServicesContext";
 
 export const Catalog = () => {
