@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import axiosInstance from "./axiosConfig"; 
+import axiosInstance from "./axiosConfig"; // Импортируйте настроенный axios
 
 class UserStore {
   username = "";
@@ -81,12 +81,12 @@ class UserStore {
         password: this.password,
       });
       const data = response.data;
-  
+
       if (data && data.success) {
         this.setIsAuthenticated(true);
-        this.setRoles(data.roles || []); // Важно сохранить роли
-        this.setUsername(data.username || "");
-        this.setEmail(data.email || "");
+        this.setRoles(data.roles || []);
+        this.setUsername(data.username || ""); // Обновляем данные пользователя
+        this.setEmail(data.email || ""); // Если email возвращается
         navigate("/profile");
       } else {
         this.setError("Неверный логин или пароль");
@@ -96,6 +96,7 @@ class UserStore {
       console.error("Ошибка авторизации:", err);
     }
   }
+
   async register(navigate) {
     if (!this.validateForm()) return;
 
