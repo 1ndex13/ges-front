@@ -3,30 +3,29 @@ import { observer } from 'mobx-react';
 import { userStore } from '../../../api/UserStore';
 import axiosInstance from '../../../api/axiosConfig';
 import style from './AdminUsers.module.css'
-import { Modal, Button, Table, Select, message } from 'antd';
-import { div } from 'framer-motion/client';
+import { Modal, Button, Table, Select, Input, message, Row, Col } from 'antd';
 
 const { Option } = Select;
+const { Search } = Input;
 
 export const AdminUsers = observer(() => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [formData, setFormData] = useState({
+  const [searchParams, setSearchParams] = useState({
     username: '',
     email: '',
-    password: '',
-    roles: ['USER']
+    active: null,
   });
+
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  const fetchUsers = async () => {
+  const fetchUsers = async (params = {}) => {
+    setLoading(true);
     try {
-      const response = await axiosInstance.get('/api/admin/users');
+      const response = await axiosInstance.get('/api/admin/users/search', { params });
       setUsers(response.data);
     } catch (err) {
       message.error('Ошибка загрузки пользователей');
@@ -35,32 +34,41 @@ export const AdminUsers = observer(() => {
     }
   };
 
-  const handleRoleChange = async (userId, newRole) => {
-    try {
-      await axiosInstance.put(`/api/admin/users/${userId}`, {
-        roles: [newRole]
-      });
-      setUsers(users.map(user => 
-        user.id === userId ? { ...user, roles: [newRole] } : user
-      ));
-      message.success('Роль обновлена');
-    } catch (err) {
-      message.error('Ошибка изменения роли');
-    }
+  const handleSearch = () => {
+    // Убираем пустые параметры
+    const params = Object.fromEntries(
+      Object.entries(searchParams).filter(([_, v]) => v !== null && v !== '')
+    );
+    fetchUsers(params);
   };
 
+  
   const handleStatusChange = async (userId, active) => {
     try {
-      await axiosInstance.put(`/api/admin/users/${userId}`, { active });
-      setUsers(users.map(user => 
-        user.id === userId ? { ...user, active } : user
+      if (userId === userStore.userId) {
+        message.warning("Вы не можете изменить свой статус!");
+        return;
+      }
+  
+      // Находим пользователя в списке
+      const user = users.find(u => u.id === userId);
+      
+      // Отправляем обновлённые данные
+      await axiosInstance.put(`/api/admin/users/${userId}`, {
+        ...user,
+        active
+      });
+  
+      // Обновляем локальное состояние
+      setUsers(users.map(u => 
+        u.id === userId ? { ...u, active } : u
       ));
-      message.success('Статус обновлен');
+      
+      message.success("Статус обновлён!");
     } catch (err) {
-      message.error('Ошибка изменения статуса');
+      message.error("Ошибка: " + err.response?.data?.message);
     }
   };
-
   const handleDelete = async (userId) => {
     try {
       await axiosInstance.delete(`/api/admin/users/${userId}`);
@@ -71,39 +79,6 @@ export const AdminUsers = observer(() => {
     }
   };
 
-  const showModal = (user = null) => {
-    setCurrentUser(user);
-    setFormData(user ? {
-      username: user.username,
-      email: user.email,
-      password: '',
-      roles: user.roles
-    } : {
-      username: '',
-      email: '',
-      password: '',
-      roles: ['USER']
-    });
-    setIsModalVisible(true);
-  };
-
-  const handleSubmit = async () => {
-    try {
-      if (currentUser) {
-        // Обновление пользователя
-        await axiosInstance.put(`/api/admin/users/${currentUser.id}`, formData);
-        message.success('Пользователь обновлен');
-      } else {
-        // Создание пользователя
-        await axiosInstance.post('/api/admin/users', formData);
-        message.success('Пользователь создан');
-      }
-      fetchUsers();
-      setIsModalVisible(false);
-    } catch (err) {
-      message.error(err.response?.data?.message || 'Ошибка операции');
-    }
-  };
 
   const columns = [
     {
@@ -124,16 +99,7 @@ export const AdminUsers = observer(() => {
     {
       title: 'Роль',
       key: 'roles',
-      render: (_, user) => (
-        <Select
-          value={user.roles[0]}
-          onChange={(value) => handleRoleChange(user.id, value)}
-          style={{ width: 120 }}
-        >
-          <Option value="USER">Пользователь</Option>
-          <Option value="ADMIN">Администратор</Option>
-        </Select>
-      ),
+      dataIndex: 'roles',
     },
     {
       title: 'Статус',
@@ -154,7 +120,6 @@ export const AdminUsers = observer(() => {
       key: 'actions',
       render: (_, user) => (
         <>
-          <Button type="link" onClick={() => showModal(user)}>Редактировать</Button>
           {user.id !== userStore.userId && (
             <Button type="link" danger onClick={() => handleDelete(user.id)}>
               Удалить
@@ -166,67 +131,53 @@ export const AdminUsers = observer(() => {
   ];
 
   return (
-    <div className={style.container}>
-    <div className={style.admin_users}>
-      <div style={{ marginBottom: 16 }}>
-        <Button type="primary" onClick={() => showModal()}>
-          Создать пользователя
+       <div className={style.admin_users}>
+      <div className={style.admin_users}>
+    <Row gutter={16} align="middle" style={{ marginBottom: 16 }}>
+      <Col span={7}>
+        <Input
+          placeholder="Поиск по имени"
+          value={searchParams.username}
+          onChange={(e) => setSearchParams({ ...searchParams, username: e.target.value })}
+          onPressEnter={handleSearch}
+        />
+      </Col>
+      <Col span={7}>
+        <Input
+          placeholder="Поиск по email"
+          value={searchParams.email}
+          onChange={(e) => setSearchParams({ ...searchParams, email: e.target.value })}
+          onPressEnter={handleSearch}
+        />
+      </Col>
+      <Col span={7}>
+        <Select
+          placeholder="Статус"
+          style={{ width: '100%' }}
+          value={searchParams.active}
+          onChange={(value) => setSearchParams({ ...searchParams, active: value })}
+          allowClear
+        >
+          <Option value={true}>Активен</Option>
+          <Option value={false}>Заблокирован</Option>
+        </Select>
+      </Col>
+      <Col span={3}>
+        <Button 
+          type="default"  // Серый цвет кнопки
+          onClick={handleSearch}
+          style={{ width: '100%' }}
+        >
+          Найти
         </Button>
-      </div>
-
+      </Col>
+    </Row>
       <Table 
         columns={columns} 
         dataSource={users} 
         rowKey="id"
         loading={loading}
       />
-
-      <Modal
-        title={currentUser ? 'Редактировать пользователя' : 'Создать пользователя'}
-        visible={isModalVisible}
-        onOk={handleSubmit}
-        onCancel={() => setIsModalVisible(false)}
-      >
-        <div style={{ marginBottom: 16 }}>
-          <label>Имя пользователя:</label>
-          <input
-            type="text"
-            value={formData.username}
-            onChange={(e) => setFormData({...formData, username: e.target.value})}
-            style={{ width: '100%' }}
-          />
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => setFormData({...formData, email: e.target.value})}
-            style={{ width: '100%' }}
-          />
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <label>Пароль:</label>
-          <input
-            type="password"
-            value={formData.password}
-            onChange={(e) => setFormData({...formData, password: e.target.value})}
-            style={{ width: '100%' }}
-          />
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <label>Роли:</label>
-          <Select
-            mode="multiple"
-            value={formData.roles}
-            onChange={(value) => setFormData({...formData, roles: value})}
-            style={{ width: '100%' }}
-          >
-            <Option value="USER">Пользователь</Option>
-            <Option value="ADMIN">Администратор</Option>
-          </Select>
-        </div>
-      </Modal></div>
-    </div>
+    </div></div>
   );
 });
