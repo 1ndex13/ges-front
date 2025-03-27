@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import style from "./Catalog.module.css";
 import { EditProductForm } from "./EditProductForm";
-import { getProducts, addProduct, updateProduct, deleteProduct } from "../../../api/api"
+import { getProducts, addProduct, updateProduct, deleteProduct } from "../../../api/api";
 import { useServices } from "./ServicesContext";
 
 export const Catalog = () => {
@@ -13,6 +13,7 @@ export const Catalog = () => {
   const [userRole, setUserRole] = useState([]);
   const cardsPerPage = 6;
   const { addService } = useServices();
+  const baseUrl = "http://localhost:8080";
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -52,11 +53,20 @@ export const Catalog = () => {
     fetchProducts();
   }, []);
 
-  const handleAddProduct = async (newProduct) => {
+  const handleAddProduct = async (newProductData) => {
     try {
-      const addedProduct = await addProduct(newProduct);
+      const formData = new FormData();
+      formData.append("title", newProductData.title);
+      formData.append("description", newProductData.description);
+      if (newProductData.image) {
+        formData.append("image", newProductData.image);
+      }
+
+      const addedProduct = await addProduct(formData);
+      console.log("Added product from server:", addedProduct);
       setCards((prev) => [...prev, addedProduct]);
       setEditingProduct(null);
+      setCurrentPage(Math.ceil((cards.length + 1) / cardsPerPage));
     } catch (error) {
       console.error("Ошибка при добавлении товара:", error);
     }
@@ -125,7 +135,11 @@ export const Catalog = () => {
                 onMouseLeave={() => setHoveredIndex(null)}
               >
                 <div className={style.front}>
-                  <img src={card.imgSrc} alt={card.title} />
+                  {card.imgSrc ? (
+                    <img src={`${baseUrl}${card.imgSrc}`} alt={card.title} />
+                  ) : (
+                    <p>Изображение отсутствует</p>
+                  )}
                 </div>
                 <div className={style.back}>
                   <h3>{card.title}</h3>
@@ -176,7 +190,7 @@ export const Catalog = () => {
             product={editingProduct === undefined ? null : editingProduct}
             onSave={editingProduct === undefined ? handleAddProduct : handleEditProduct}
             onCancel={() => setEditingProduct(null)}
-            onAddProduct={handleAddProduct}
+            onAddProduct={handleAddProduct} // Оставляем для совместимости
           />
         </div>
       )}

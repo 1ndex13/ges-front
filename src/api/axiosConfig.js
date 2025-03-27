@@ -5,4 +5,7 @@ const axiosInstance = axios.create({
   withCredentials: true, // Включает отправку cookie
 });
 
+
+
+
 export default axiosInstance;

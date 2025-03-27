@@ -12,9 +12,11 @@ export const getProducts = async () => {
   }
 };
 
-export const addProduct = async (product) => {
+export const addProduct = async (formData) => {
   try {
-    const response = await axiosInstance.post("/api/products", product);
+    const response = await axiosInstance.post("/api/products", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   } catch (error) {
     console.error("Ошибка при добавлении товара:", error);
@@ -22,16 +24,17 @@ export const addProduct = async (product) => {
   }
 };
 
-export const updateProduct = async (id, updatedProduct) => {
+export const updateProduct = async (id, formData) => {
   try {
-    const response = await axiosInstance.put(`/api/products/${id}`, updatedProduct);
+    const response = await axiosInstance.put(`/api/products/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   } catch (error) {
     console.error("Ошибка при обновлении товара:", error);
     throw error;
   }
 };
-
 export const deleteProduct = async (productId) => {
   try {
     const response = await axiosInstance.delete(`/api/products/${productId}`);
