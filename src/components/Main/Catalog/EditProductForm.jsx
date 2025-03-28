@@ -37,7 +37,6 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
 
     try {
       if (product) {
-        // Редактирование
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);

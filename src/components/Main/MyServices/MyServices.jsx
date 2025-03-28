@@ -34,7 +34,7 @@ export const MyServices = () => {
         <ul className={style.serviceList}>
           {services.map((service, index) => (
             <li key={index} className={style.serviceItem}>
-              <img src={service.imgSrc} alt={service.title} />
+              <img src={service.imageFile} alt={service.title} />
               <div className={style.serviceContent}>
                 <h3>{service.title}</h3>
               </div>
