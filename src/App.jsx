@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom"; // Добавляем useNavigate
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { Header } from "./components/Header/Header";
 import { FullCard } from "./components/Main/CatalogCard/FullCard";
 import { MainContent } from "./components/Main/MainContent/MainContent";
@@ -17,11 +17,9 @@ import { ServicesProvider } from "./components/Main/Catalog/ServicesContext";
 import { AdminUsers } from "./components/Main/Admin/AdminUsers";
 
 function App() {
-  const [myServices, setMyServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate(); // Добавляем хук для навигации
+  const navigate = useNavigate();
 
-  // Синхронизация с userStore
   useEffect(() => {
     const syncUserStore = () => {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -30,18 +28,13 @@ function App() {
         userStore.username = user.username;
         userStore.setRoles(user.roles || []);
       }
-      setIsLoading(false); // Завершаем загрузку после синхронизации
+      setIsLoading(false);
     };
     syncUserStore();
   }, []);
 
   const handleLogout = () => {
     userStore.logout(navigate);
-    setMyServices([]);
-  };
-
-  const addService = (service) => {
-    setMyServices((prev) => [...prev, service]);
   };
 
   if (isLoading) {
@@ -49,7 +42,7 @@ function App() {
   }
 
   return (
-    <><ServicesProvider>
+    <ServicesProvider>
       <Header isAuthenticated={userStore.isAuthenticated} onLogout={handleLogout} />
       <Routes>
         <Route path="/about" element={<AboutUs />} />
@@ -65,26 +58,23 @@ function App() {
         <Route
           path="/admin/users"
           element={
-            userStore.roles.includes("ADMIN") ?
-              <AdminUsers /> :
-              <Navigate to="/" />
+            userStore.roles.includes("ADMIN") ? <AdminUsers /> : <Navigate to="/" />
           }
         />
         <Route
           path="/catalog/:id"
-          element={<FullCard isAuthenticated={userStore.isAuthenticated} addService={addService} />}
+          element={<FullCard isAuthenticated={userStore.isAuthenticated} />}
         />
         <Route path="/" element={<MainContent />} />
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile isAuthenticated={userStore.isAuthenticated} />} />
-        <Route path="/my-services" element={<MyServices services={myServices} />} />
+        <Route path="/my-services" element={<MyServices />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
       <Footer />
     </ServicesProvider>
-    </>
   );
 }
 

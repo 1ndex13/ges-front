@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import style from "./MyServices.module.css";
-import { useServices } from "../Catalog/ServicesContext"; // Убедитесь, что путь правильный
+import { useServices } from "../Catalog/ServicesContext";
 import { ModalOrder } from "./ModalOrder";
 import { Modal } from "react-bootstrap";
-
 
 export const MyServices = () => {
   const { services, removeService } = useServices();
@@ -34,7 +33,7 @@ export const MyServices = () => {
         <ul className={style.serviceList}>
           {services.map((service, index) => (
             <li key={index} className={style.serviceItem}>
-              <img src={service.imageFile} alt={service.title} />
+              <img src={service.imgSrc} alt={service.title} />
               <div className={style.serviceContent}>
                 <h3>{service.title}</h3>
               </div>

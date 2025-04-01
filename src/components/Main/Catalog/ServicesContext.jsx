@@ -1,20 +1,30 @@
-// src/Scripts/ServicesContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react';
+import { observer } from 'mobx-react-lite'; // Добавляем observer для MobX
+import { userStore } from '../../../api/UserStore';
 
 const ServicesContext = createContext();
-const STORAGE_KEY = 'myServices'; // Ключ для localStorage
 
-export const ServicesProvider = ({ children }) => {
+export const ServicesProvider = observer(({ children }) => {
+  const getStorageKey = () => {
+    const username = userStore.username || 'guest';
+    return `myServices_${username}`;
+  };
+
   const [services, setServices] = useState(() => {
-    // При инициализации загружаем данные из localStorage
-    const savedServices = localStorage.getItem(STORAGE_KEY);
+    const savedServices = localStorage.getItem(getStorageKey());
     return savedServices ? JSON.parse(savedServices) : [];
   });
 
-  // Сохраняем услуги в localStorage при каждом изменении
+  // Синхронизация с localStorage при изменении services
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(services));
+    localStorage.setItem(getStorageKey(), JSON.stringify(services));
   }, [services]);
+
+  // Синхронизация с username из userStore
+  useEffect(() => {
+    const savedServices = localStorage.getItem(getStorageKey());
+    setServices(savedServices ? JSON.parse(savedServices) : []);
+  }, [userStore.username]); // Оставляем, но теперь с observer это будет работать лучше
 
   const addService = (service) => {
     setServices((prev) => {
@@ -34,6 +44,6 @@ export const ServicesProvider = ({ children }) => {
       {children}
     </ServicesContext.Provider>
   );
-};
+});
 
 export const useServices = () => useContext(ServicesContext);

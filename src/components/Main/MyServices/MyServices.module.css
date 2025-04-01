@@ -13,7 +13,7 @@
   margin: 0;
 }
 
-.serviceContent h3{
+.serviceContent h3 {
   font-weight: 250;
   font-size: 24px;
 }
@@ -51,7 +51,7 @@
 }
 
 .serviceContent {
-  flex: 1; 
+  flex: 1;
 }
 
 .serviceContent h1 {
@@ -77,7 +77,8 @@
 }
 
 .payButton:hover {
-  background-color: #45a049;}
+  background-color: #45a049;
+}
 
 .deleteButton {
   padding: 10px 20px;
@@ -91,73 +92,130 @@
 }
 
 .deleteButton:hover {
-  background-color: #d32f2f; 
+  background-color: #d32f2f;
 }
 
-.modalOverlay {
+.modalBackdrop {
+  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  z-index: 1040;
+}
+
+.modalDialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  width: 100%;
+  max-width: 500px;
+  margin: 0;
+  padding: 20px;
 }
 
 .modalContent {
-  background-color: white;
+  border-radius: 10px;
+  border: none;
+  background-color: #f8f9fa;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modalOrderHeader {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 15px 20px;
+  border-radius: 10px;
+}
+
+.modalOrderTitle {
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+}
+
+.modalOrderBody {
   padding: 20px;
-  border-radius: 8px;
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
+}
+
+.formModalOrder {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.edit_form_input {
+  width: 95%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edit_form_input:focus {
+  border-color: #80bdff;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .modalActions {
-  margin-top: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
 }
 
-.modalActions button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.modalActions button:first-child {
-  background-color: #ccc;
-}
-
-.modalActions button:last-child {
-  background-color: #007bff;
-  color: white;
-}
-
-.modalContent h2{
+.modalOrderTitle{
   font-weight: 400;
 }
 
 
-.formModalOrder{
-  display: flex;
-  flex-direction: column;
+.submitButton {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.edit_form_input,
-.edit_form_textarea {
-    width: 375px;
-    padding: 8px 12px;
-    margin-top: 5px;
-    border: 1px solid #aab9c9;
-    border-radius: 5px;
-    font-size: 16px;
-    display: flex;
-  
-    font-weight: 300;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
+.submitButton:hover {
+  background-color: #218838;
 }
+
+.cancelButton {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+.error {
+  color: #dc3545;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+}
+
+.container {
+  font-family: "Oswald", sans-serif;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  position: relative; /* Добавлено для корректного позиционирования */
+  z-index: 1; /* Убедитесь, что контент ниже модального окна */
+}
+
+

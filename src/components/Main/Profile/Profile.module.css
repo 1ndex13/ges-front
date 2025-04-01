@@ -1,0 +1,199 @@
+.profilePage {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .profilePage h1{
+    font-weight: 300;
+    margin-top: 30px;
+  }
+  
+  .profileHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .profileContainer {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+  }
+  
+  .alert {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Avatar styles */
+  .avatarSection {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .avatarWrapper {
+    position: relative;
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+  }
+  
+  .avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f0f2f5;
+  }
+  
+  .avatarUploadLabel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-align: center;
+    padding: 8px 0;
+    cursor: pointer;
+    border-bottom-left-radius: 75px;
+    border-bottom-right-radius: 75px;
+    transition: all 0.3s ease;
+  }
+  
+  .avatarUploadLabel:hover {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .avatarUploadLabel span {
+    font-size: 0.9rem;
+  }
+  
+  .avatarInput {
+    display: none;
+  }
+  
+  /* Form styles */
+  .profileForm {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  
+  .formGroup {
+    margin-bottom: 1.5rem;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #495057;
+  }
+
+  .formGroup input{
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 10px;
+    width: 300px;
+  }
+  
+  .formActions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .saveButton, .cancelButton, .editButton {
+    padding: 10px 20px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cancelButton:hover {
+    background-color: #5a6268;
+  }
+
+  .saveButton {
+    padding: 10px 30px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  }
+
+  .saveButton:hover {
+    background-color: #218838;
+  }
+  
+  /* View mode styles */
+  .profileView {
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .userInfo {
+    margin-top: 1.5rem;
+  }
+  
+  .username {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: #212529;
+  }
+  
+  .userEmail {
+    color: #6c757d;
+    margin-bottom: 2rem;
+  }
+  
+  .infoBlock {
+    margin-bottom: 1.5rem;
+    text-align: left;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .infoBlock h4 {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+  }
+  
+  .infoBlock p {
+    font-size: 1.1rem;
+    color: #212529;
+    margin: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 576px) {
+    .profilePage {
+      padding: 1rem;
+    }
+    
+    .profileHeader {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .formActions {
+      flex-direction: column;
+    }
+    
+    .saveButton, .cancelButton {
+      width: 100%;
+    }
+  }

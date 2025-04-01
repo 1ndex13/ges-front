@@ -1,79 +1,98 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axiosInstance from "../../../api/axiosConfig";
 import style from './MyServices.module.css';
+import { Modal } from "react-bootstrap";
 
 export const ModalOrder = ({ isOpen, onClose, serviceTitle }) => {
-    const [formData, setFormData] = useState({
-        lastName: '',
-        firstName: '',
-        phone: '',
-        email: '',
-        service: serviceTitle
-    });
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
-
+    const [lastName, setLastName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+    const [error, setError] = useState("");
+  
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError(null);
-        
-        try {
-            const response = await axios.post('http://localhost:8080/api/orders', formData, {
-                withCredentials: true,
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('jwtToken') || ''}`
-                }
-            });
-            
-            if (response.status === 200) {
-                setSuccess(true);
-                setTimeout(() => {
-                    onClose();
-                    setSuccess(false);
-                }, 2000);
-            }
-        } catch (err) {
-            console.error('Full error:', err);
-            setError(err.response?.data || err.message || 'Ошибка при отправке заказа');
-        } finally {
-            setIsLoading(false);
-        }
+      e.preventDefault();
+      const orderData = {
+        lastName,
+        firstName,
+        phone,
+        email,
+        service: serviceTitle,
+      };
+  
+      try {
+        console.log("Отправка заказа:", orderData);
+        const response = await axiosInstance.post("/api/orders", orderData);
+        console.log("Ответ от сервера:", response.data);
+        alert("Заказ успешно отправлен!");
+        setLastName("");
+        setFirstName("");
+        setPhone("");
+        setEmail("");
+        setError("");
+        onClose();
+      } catch (error) {
+        console.error("Ошибка при отправке заказа:", error.response?.data || error.message);
+        setError(error.response?.data || "Ошибка при отправке заказа");
+      }
     };
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    if (!isOpen) return null;
-
+  
     return (
-        <div className={style.modalOverlay}>
-            <div className={style.modalContent}>
-                <h2>Оформление заказа: {serviceTitle}</h2>
-                
-                {success && <div className={style.successMessage}>Заказ успешно отправлен!</div>}
-                {error && <div className={style.errorMessage}>{error}</div>}
-
-                <form onSubmit={handleSubmit}>
-                    {/* Поля формы остаются без изменений */}
-                    <input type="text" name="lastName" /* ... */ />
-                    <input type="text" name="firstName" /* ... */ />
-                    <input type="tel" name="phone" /* ... */ />
-                    <input type="email" name="email" /* ... */ />
-                    
-                    <div className={style.modalActions}>
-                        <button type="button" onClick={onClose} disabled={isLoading}>
-                            Отмена
-                        </button>
-                        <button type="submit" disabled={isLoading}>
-                            {isLoading ? 'Отправка...' : 'Оформить заказ'}
-                        </button>
-                    </div>
-                </form>
+      <Modal 
+        show={isOpen} 
+        onHide={onClose} 
+        centered // Это свойство центрирует модальное окно
+        backdropClassName={style.modalBackdrop}
+        dialogClassName={style.modalDialog}
+        contentClassName={style.modalContent}
+        closeButton={false}
+      >
+        <Modal.Header closeButton className={style.modalOrderHeader}>
+          <Modal.Title className={style.modalOrderTitle}>
+            Оформить заказ: {serviceTitle}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className={style.modalOrderBody}>
+          {error && <p className={style.error}>{error}</p>}
+          <form className={style.formModalOrder} onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Фамилия"
+              required
+              className={style.edit_form_input}
+            />
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Имя"
+              required
+              className={style.edit_form_input}
+            />
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Телефон"
+              required
+              className={style.edit_form_input}
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+              className={style.edit_form_input}
+            />
+            <div className={style.modalActions}>
+              <button type="submit" className={style.submitButton}>Отправить</button>
+              <button type="button" onClick={onClose} className={style.cancelButton}>Отмена</button>
             </div>
-        </div>
+          </form>
+        </Modal.Body>
+      </Modal>
     );
 };

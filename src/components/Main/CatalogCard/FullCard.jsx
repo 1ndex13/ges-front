@@ -1,32 +1,29 @@
-import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { CatalogCard } from "../CatalogCard/CatalogCard";
-import { cardsData } from "../../../Scripts/cardsData"; // Импортируем данные карточек
+import { useServices } from "../Catalog/ServicesContext"; // Убедитесь, что путь правильный
 
-export const FullCard = ({ isAuthenticated, addService }) => {
-  const { id } = useParams(); // Получаем id карточки из URL
-  const [cardData, setCardData] = useState(null);
+export const FullCard = ({ isAuthenticated }) => {
+  const { id } = useParams();
+  const { addService } = useServices();
 
-  useEffect(() => {
-    // Находим карточку по id
-    const card = cardsData.find((card) => card.id === parseInt(id));
-    if (card) {
-      setCardData(card);
-    }
-  }, [id]);
+  // Пример логики для FullCard
+  const card = { id, title: "Пример", description: "Описание", imgSrc: "/path" }; // Замените на реальные данные
 
-  if (!cardData) {
-    return <div>Карточка не найдена</div>;
-  }
+  const handleAdd = () => {
+    addService({
+      id: card.id,
+      title: card.title,
+      description: card.description,
+      imgSrc: card.imgSrc,
+    });
+  };
 
   return (
     <div>
-      <CatalogCard
-        isAuthenticated={isAuthenticated}
-        addService={addService}
-        cardData={cardData}
-        isFullView={true} // Передаем флаг для отображения полной карточки
-      />
+      <h1>{card.title}</h1>
+      <p>{card.description}</p>
+      {isAuthenticated && (
+        <button onClick={handleAdd}>Добавить в корзину</button>
+      )}
     </div>
   );
 };
