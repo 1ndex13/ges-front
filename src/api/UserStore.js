@@ -1,7 +1,8 @@
 import { makeAutoObservable } from "mobx";
-import axiosInstance from "./axiosConfig"; // Импортируйте настроенный axios
+import axiosInstance from "./axiosConfig";
 
 class UserStore {
+  // Auth fields
   username = "";
   email = "";
   password = "";
@@ -9,147 +10,136 @@ class UserStore {
   error = "";
   isAuthenticated = false;
   roles = [];
+  isLoading = false;
+
+  // Profile fields
+  nickname = "";
+  firstName = "";
+  lastName = "";
+  birthDate = "";
+  avatar = "";
 
   constructor() {
     makeAutoObservable(this);
-    this.loadUserFromLocalStorage(); // Восстановление состояния (будет обновлено ниже)
+    this.loadFromLocalStorage();
   }
 
-  setUsername(username) {
-    this.username = username;
-  }
+  // Core setters
+  setUsername = (username) => (this.username = username);
+  setEmail = (email) => (this.email = email);
+  setPassword = (password) => (this.password = password);
+  setConfirmPassword = (confirmPassword) => (this.confirmPassword = confirmPassword);
+  setError = (error) => (this.error = error);
+  setIsAuthenticated = (isAuthenticated) => (this.isAuthenticated = isAuthenticated);
+  setRoles = (roles) => (this.roles = roles);
+  setIsLoading = (isLoading) => (this.isLoading = isLoading);
 
-  setEmail(email) {
-    this.email = email;
-  }
+  // Profile setters
+  setNickname = (nickname) => (this.nickname = nickname);
+  setFirstName = (firstName) => (this.firstName = firstName);
+  setLastName = (lastName) => (this.lastName = lastName);
+  setBirthDate = (birthDate) => (this.birthDate = birthDate);
+  setAvatar = (avatar) => (this.avatar = avatar);
 
-  setPassword(password) {
-    this.password = password;
-  }
+  // Unified user data setter
+  setUser = (userData) => {
+    this.username = userData.username || "";
+    this.email = userData.email || "";
+    this.roles = userData.roles || [];
+    this.isAuthenticated = !!userData.success;
+    this.nickname = userData.nickname || "";
+    this.firstName = userData.firstName || "";
+    this.lastName = userData.lastName || "";
+    this.birthDate = userData.birthDate || "";
+    this.avatar = userData.avatar || "";
+    this.error = "";
+  };
 
-  setConfirmPassword(confirmPassword) {
-    this.confirmPassword = confirmPassword;
-  }
-
-  setError(error) {
-    this.error = error;
-  }
-
-  setIsAuthenticated(isAuthenticated) {
-    this.isAuthenticated = isAuthenticated;
-  }
-
-  setRoles(roles) {
-    this.roles = roles;
-  }
-
-  // Загрузка данных пользователя (теперь из cookie, а не localStorage)
-  loadUserFromLocalStorage() {
-    // Поскольку токен теперь в cookie (HttpOnly), мы не можем напрямую его прочитать
-    // Вместо этого запросим статус авторизации у бэкенда
-    this.checkAuthStatus();
-  }
-
-  // Проверка статуса авторизации
-  async checkAuthStatus() {
+  // Auth methods
+  login = async (navigate) => {
+    this.setIsLoading(true);
     try {
-      const response = await axiosInstance.get('/api/auth/check'); // Эндпоинт для проверки авторизации (нужен на бэкенде)
-      if (response.data.success) {
-        this.setIsAuthenticated(true);
-        this.setRoles(response.data.roles || []);
-        this.setUsername(response.data.username || "");
-        this.setEmail(response.data.email || "");
-      } else {
-        this.setIsAuthenticated(false);
-        this.setRoles([]);
-        this.setUsername("");
-        this.setEmail("");
-      }
-    } catch (err) {
-      this.setIsAuthenticated(false);
-      this.setRoles([]);
-      this.setUsername("");
-      this.setEmail("");
-      console.error("Ошибка проверки авторизации:", err);
-    }
-  }
-
-  async login(navigate) {
-    try {
-      const response = await axiosInstance.post("/api/auth/login", {
+      const { data } = await axiosInstance.post("/api/auth/login", {
         username: this.username,
         password: this.password,
       });
-      const data = response.data;
 
-      if (data && data.success) {
-        this.setIsAuthenticated(true);
-        this.setRoles(data.roles || []);
-        this.setUsername(data.username || ""); // Обновляем данные пользователя
-        this.setEmail(data.email || ""); // Если email возвращается
+      if (data?.success) {
+        this.setUser(data);
+        localStorage.setItem("user", JSON.stringify({
+          success: true,
+          username: data.username,
+          email: data.email,
+          roles: data.roles,
+          nickname: data.nickname,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthDate: data.birthDate,
+          avatar: data.avatar
+        }));
         navigate("/profile");
       } else {
-        this.setError("Неверный логин или пароль");
+        this.setError(data?.message || "Неверный логин или пароль");
       }
     } catch (err) {
-      this.setError("Ошибка авторизации");
-      console.error("Ошибка авторизации:", err);
+      this.setError(err.response?.data?.message || "Ошибка авторизации");
+    } finally {
+      this.setIsLoading(false);
     }
-  }
+  };
 
-  async register(navigate) {
-    if (!this.validateForm()) return;
-
+  logout = async (navigate) => {
     try {
-      const response = await axiosInstance.post("/api/auth/register", {
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      });
+      await axiosInstance.post("/api/auth/logout");
+    } catch (err) {
+      console.error("Ошибка выхода:", err);
+    } finally {
+      this.resetUserState();
+      localStorage.removeItem("user");
+      navigate("/login");
+    }
+  };
 
-      if (response.data && response.data.success) {
-        this.setUsername("");
-        this.setEmail("");
-        this.setPassword("");
-        this.setConfirmPassword("");
-        this.setError("");
-        navigate("/login");
-      } else {
-        this.setError("Ошибка регистрации");
+  // Profile methods
+  loadFullProfile = async () => {
+    try {
+      const { data } = await axiosInstance.get("/users/profile");
+      if (data) {
+        this.setUser({
+          ...data,
+          success: true
+        });
+        localStorage.setItem("user", JSON.stringify({
+          success: true,
+          username: data.username,
+          email: data.email,
+          roles: data.roles,
+          nickname: data.nickname,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthDate: data.birthDate,
+          avatar: data.avatar
+        }));
       }
     } catch (err) {
-      this.setError(
-        err.response?.status === 400
-          ? "Пользователь с таким именем или email уже существует"
-          : "Ошибка регистрации"
-      );
-      console.error("Ошибка регистрации:", err);
+      console.error("Ошибка загрузки профиля:", err);
     }
-  }
+  };
 
-  // Валидация формы
-  validateForm() {
-    if (!this.username || !this.password || !this.confirmPassword) {
-      this.setError("Все поля обязательны для заполнения");
-      return false;
+  // Storage methods
+  loadFromLocalStorage = () => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        this.setUser(JSON.parse(userData));
+      } catch (e) {
+        console.error("Ошибка парсинга данных пользователя:", e);
+      }
     }
-    if (this.password !== this.confirmPassword) {
-      this.setError("Пароли не совпадают");
-      return false;
-    }
-    if (this.password.length < 6) {
-      this.setError("Пароль должен содержать минимум 6 символов");
-      return false;
-    }
-    if (!/\S+@\S+\.\S+/.test(this.email)) {
-      this.setError("Введите корректный email");
-      return false;
-    }
-    return true;
-  }
-  logout(navigate) {
-    // Очистка состояния, cookie удалит бэкенд
+  };
 
+  // Reset methods
+  resetUserState = () => {
     this.setIsAuthenticated(false);
     this.setRoles([]);
     this.setUsername("");
@@ -157,10 +147,15 @@ class UserStore {
     this.setPassword("");
     this.setConfirmPassword("");
     this.setError("");
-    navigate("/login");
-    // Запрос на logout на бэкенде (если реализован)
-    axiosInstance.post('/api/auth/logout').catch(err => console.error("Ошибка выхода:", err));
-  }
+    this.setNickname("");
+    this.setFirstName("");
+    this.setLastName("");
+    this.setBirthDate("");
+    this.setAvatar("");
+  };
+
+  
 }
+
 
 export const userStore = new UserStore();

@@ -21,16 +21,23 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const syncUserStore = () => {
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user && user.success) {
-        userStore.setIsAuthenticated(true);
-        userStore.username = user.username;
-        userStore.setRoles(user.roles || []);
+    const initializeApp = async () => {
+      try {
+        // Проверяем аутентификацию
+        await userStore.checkAuthStatus();
+        
+        // Если пользователь аутентифицирован, загружаем полный профиль
+        if (userStore.isAuthenticated) {
+          await userStore.loadFullProfile();
+        }
+      } catch (error) {
+        console.error("Ошибка инициализации приложения:", error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
-    syncUserStore();
+
+    initializeApp();
   }, []);
 
   const handleLogout = () => {
@@ -38,7 +45,7 @@ function App() {
   };
 
   if (isLoading) {
-    return <div>Загрузка...</div>;
+    return <div className="loading-screen">Загрузка...</div>;
   }
 
   return (
@@ -69,7 +76,10 @@ function App() {
         <Route path="/contacts" element={<Contacts />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile isAuthenticated={userStore.isAuthenticated} />} />
+        <Route
+          path="/profile"
+          element={<Profile isAuthenticated={userStore.isAuthenticated} />}
+        />
         <Route path="/my-services" element={<MyServices />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>

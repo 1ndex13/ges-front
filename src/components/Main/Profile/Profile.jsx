@@ -20,55 +20,50 @@ export const Profile = observer(() => {
     lastName: "",
     birthDate: "",
     avatar: null,
-    previewAvatar: ""
+    previewAvatar: "",
   });
 
   useEffect(() => {
     if (!userStore.isAuthenticated) {
       navigate("/login");
     } else {
-      loadUserData();
+      // Загружаем данные из UserStore
+      setUserData({
+        nickname: userStore.nickname,
+        email: userStore.email,
+        firstName: userStore.firstName,
+        lastName: userStore.lastName,
+        birthDate: userStore.birthDate,
+        avatar: null,
+        previewAvatar: userStore.avatar || "/default-avatar.png",
+      });
+      
+      // Загружаем свежие данные с сервера
+      userStore.loadFullProfile();
     }
   }, [userStore.isAuthenticated, navigate]);
 
-  const loadUserData = () => {
-    const storedUser = JSON.parse(localStorage.getItem("user")) || {};
-    setUserData({
-      nickname: storedUser.nickname || "",
-      email: storedUser.email || "",
-      firstName: storedUser.firstName || "",
-      lastName: storedUser.lastName || "",
-      birthDate: storedUser.birthDate || "",
-      avatar: null,
-      previewAvatar: storedUser.avatar || "/default-avatar.png"
-    });
-  };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserData(prev => ({ ...prev, [name]: value }));
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Валидация размера файла (макс. 2MB)
       if (file.size > 2 * 1024 * 1024) {
         setError("Размер файла не должен превышать 2MB");
         return;
       }
-      
-      // Валидация типа файла
       if (!file.type.match("image.*")) {
         setError("Пожалуйста, выберите изображение");
         return;
       }
-
       setError("");
-      setUserData(prev => ({
+      setUserData((prev) => ({
         ...prev,
         avatar: file,
-        previewAvatar: URL.createObjectURL(file)
+        previewAvatar: URL.createObjectURL(file),
       }));
     }
   };
@@ -76,12 +71,9 @@ export const Profile = observer(() => {
   const uploadAvatar = async (file) => {
     const formData = new FormData();
     formData.append("avatar", file);
-    
     try {
       const response = await axiosInstance.post("/users/upload-avatar", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
+        headers: { "Content-Type": "multipart/form-data" },
       });
       return response.data.avatarUrl;
     } catch (err) {
@@ -93,7 +85,7 @@ export const Profile = observer(() => {
   const updateProfile = async (profileData) => {
     try {
       const response = await axiosInstance.put("/users/profile", profileData);
-      return response.data.user;
+      return response.data;
     } catch (err) {
       console.error("Profile update error:", err);
       throw new Error("Не удалось обновить профиль");
@@ -108,29 +100,40 @@ export const Profile = observer(() => {
 
     try {
       let avatarUrl = userData.previewAvatar;
-      
-      // Загружаем новый аватар, если он был выбран
       if (userData.avatar instanceof File) {
         avatarUrl = await uploadAvatar(userData.avatar);
       }
 
-      // Подготавливаем данные для отправки
       const profileData = {
         nickname: userData.nickname,
         email: userData.email,
         firstName: userData.firstName,
         lastName: userData.lastName,
         birthDate: userData.birthDate,
-        avatar: avatarUrl
+        avatar: avatarUrl,
       };
 
-      // Обновляем профиль на сервере
       const updatedUser = await updateProfile(profileData);
-
-      // Обновляем данные в хранилищах
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      userStore.setUser(updatedUser);
       
+      // Обновляем данные в UserStore
+      userStore.setUser({
+        ...updatedUser,
+        success: true
+      });
+
+      // Сохраняем в localStorage
+      localStorage.setItem("user", JSON.stringify({
+        success: true,
+        username: updatedUser.username || userStore.username,
+        email: updatedUser.email || userData.email,
+        roles: updatedUser.roles || userStore.roles,
+        nickname: updatedUser.nickname || userData.nickname,
+        firstName: updatedUser.firstName || userData.firstName,
+        lastName: updatedUser.lastName || userData.lastName,
+        birthDate: updatedUser.birthDate || userData.birthDate,
+        avatar: updatedUser.avatar || avatarUrl,
+      }));
+
       setSuccess("Профиль успешно обновлен!");
       setTimeout(() => setSuccess(""), 3000);
       setEditMode(false);
@@ -150,7 +153,7 @@ export const Profile = observer(() => {
       <div className={style.profileHeader}>
         <h1>Мой профиль</h1>
         {!editMode && (
-          <Button 
+          <Button
             variant="outline-primary"
             onClick={() => setEditMode(true)}
             className={style.editButton}
@@ -168,9 +171,9 @@ export const Profile = observer(() => {
           <Form onSubmit={handleSubmit} className={style.profileForm}>
             <div className={style.avatarSection}>
               <div className={style.avatarWrapper}>
-                <img 
-                  src={userData.previewAvatar} 
-                  alt="Аватар" 
+                <img
+                  src={userData.previewAvatar}
+                  alt="Аватар"
                   className={style.avatar}
                 />
                 <label htmlFor="avatar-upload" className={style.avatarUploadLabel}>
@@ -241,57 +244,64 @@ export const Profile = observer(() => {
             </Form.Group>
 
             <div className={style.formActions}>
-              <Button 
-                variant="primary" 
-                type="submit" 
+              <Button
+                variant="primary"
+                type="submit"
                 disabled={loading}
                 className={style.saveButton}
               >
-                {loading ? "Сохранение..." : (
-                  <>
-                    Сохранить
-                  </>
-                )}
+                {loading ? "Сохранение..." : <><FaSave /> Сохранить</>}
               </Button>
-              <Button 
-                variant="outline-secondary" 
+              <Button
+                variant="outline-secondary"
                 onClick={() => {
                   setEditMode(false);
                   setError("");
-                  loadUserData();
+                  // Восстанавливаем данные из UserStore
+                  setUserData({
+                    nickname: userStore.nickname,
+                    email: userStore.email,
+                    firstName: userStore.firstName,
+                    lastName: userStore.lastName,
+                    birthDate: userStore.birthDate,
+                    avatar: null,
+                    previewAvatar: userStore.avatar || "/default-avatar.png",
+                  });
                 }}
                 disabled={loading}
                 className={style.cancelButton}
               >
-                Отмена
+                <FaTimes /> Отмена
               </Button>
             </div>
           </Form>
         ) : (
           <div className={style.profileView}>
             <div className={style.avatarSection}>
-              <img 
-                src={userData.previewAvatar} 
-                alt="Аватар" 
+              <img
+                src={userStore.avatar || "/default-avatar.png"}
+                alt="Аватар"
                 className={style.avatar}
               />
             </div>
 
             <div className={style.userInfo}>
-              <h2 className={style.username}>{userData.nickname}</h2>
-              <p className={style.userEmail}>{userData.email}</p>
+              <h2 className={style.username}>{userStore.nickname}</h2>
+              <p className={style.userEmail}>{userStore.email}</p>
 
-              {(userData.firstName || userData.lastName) && (
+              {(userStore.firstName || userStore.lastName) && (
                 <div className={style.infoBlock}>
                   <h4>Имя</h4>
-                  <p>{userData.firstName} {userData.lastName}</p>
+                  <p>
+                    {userStore.firstName} {userStore.lastName}
+                  </p>
                 </div>
               )}
 
-              {userData.birthDate && (
+              {userStore.birthDate && (
                 <div className={style.infoBlock}>
                   <h4>Дата рождения</h4>
-                  <p>{new Date(userData.birthDate).toLocaleDateString()}</p>
+                  <p>{new Date(userStore.birthDate).toLocaleDateString()}</p>
                 </div>
               )}
             </div>
