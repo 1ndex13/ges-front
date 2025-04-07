@@ -128,3 +128,224 @@
     width: 93%;
   }
 }
+
+.reviewList {
+  list-style: none;
+  max-height: 100%;
+  padding-left: 0;
+}
+
+.reviewItem {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.reviewItem p {
+  margin: 0;
+  font-size: 16px;
+  color: #555;
+}
+
+.reviewItem small {
+  display: block;
+  margin-top: 5px;
+  color: #888;
+  font-size: 12px;
+}
+
+.cancelButton {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  background-color: #5a6268;
+}
+
+
+/* Фон модального окна */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6); /* Более глубокий полупрозрачный фон */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out; /* Плавное появление фона */
+}
+
+/* Анимация появления фона */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Контейнер модального окна */
+.modalContent {
+  background: #fff;
+  border-radius: 15px; /* Более мягкие углы */
+  width: 90%;
+  max-width: 550px; /* Чуть шире для удобства */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Глубокая тень */
+  overflow: hidden;
+  transform: scale(0.9); /* Легкий эффект появления */
+  animation: scaleIn 0.3s ease-out forwards; /* Анимация открытия */
+}
+
+/* Анимация появления модального окна */
+@keyframes scaleIn {
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Заголовок модального окна */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: linear-gradient(135deg, #f7f9fc 0%, #eef2f6 100%); /* Легкий градиент */
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-family: "Oswald", serif; /* Используем шрифт из проекта */
+  font-size: 24px;
+  font-weight: 400;
+  color: #333;
+}
+
+/* Кнопка закрытия */
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.closeButton:hover {
+  color: #000;
+  transform: rotate(90deg); /* Эффект поворота при наведении */
+}
+
+/* Тело модального окна */
+.modalBody {
+  padding: 25px;
+  font-family: "Montserrat", sans-serif; /* Более мягкий шрифт для текста */
+}
+
+/* Группа формы */
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+/* Стили для select и textarea */
+.edit_form_input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa; /* Легкий фон для полей ввода */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edit_form_input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3); /* Легкое свечение при фокусе */
+  outline: none;
+}
+
+/* Текстовая область */
+.edit_form_input[type="textarea"] {
+  resize: vertical; /* Позволяет менять только высоту */
+  min-height: 100px;
+}
+
+/* Сообщения об ошибке и успехе */
+.modalBody p {
+  margin: 0 0 15px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.modalBody p[style*="color: red"] {
+  background: #ffe6e6; /* Легкий красный фон для ошибок */
+}
+
+.modalBody p[style*="color: green"] {
+  background: #e6ffe6; /* Легкий зеленый фон для успеха */
+}
+
+/* Контейнер кнопок */
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+/* Кнопка отправки */
+.submitButton {
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); /* Градиент */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submitButton:hover {
+  transform: translateY(-2px); /* Легкий подъем при наведении */
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4); /* Тень при наведении */
+}
+
+/* Кнопка отмены */
+.cancelButton {
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); /* Градиент */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cancelButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+}

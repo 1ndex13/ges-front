@@ -23,10 +23,7 @@ function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Проверяем аутентификацию
         await userStore.checkAuthStatus();
-        
-        // Если пользователь аутентифицирован, загружаем полный профиль
         if (userStore.isAuthenticated) {
           await userStore.loadFullProfile();
         }

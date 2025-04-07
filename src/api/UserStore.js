@@ -88,6 +88,44 @@ class UserStore {
     }
   };
 
+  register = async (navigate) => {
+    this.setIsLoading(true);
+    try {
+      if (this.password !== this.confirmPassword) {
+        this.setError("Пароли не совпадают");
+        return;
+      }
+
+      const { data } = await axiosInstance.post("/api/auth/register", {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+      });
+
+      if (data?.success) {
+        this.setUser(data);
+        localStorage.setItem("user", JSON.stringify({
+          success: true,
+          username: data.username,
+          email: data.email,
+          roles: data.roles,
+          nickname: data.nickname,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthDate: data.birthDate,
+          avatar: data.avatar
+        }));
+        navigate("/profile");
+      } else {
+        this.setError(data?.message || "Ошибка регистрации");
+      }
+    } catch (err) {
+      this.setError(err.response?.data?.message || "Ошибка при регистрации");
+    } finally {
+      this.setIsLoading(false);
+    }
+  };
+
   logout = async (navigate) => {
     try {
       await axiosInstance.post("/api/auth/logout");
@@ -97,6 +135,36 @@ class UserStore {
       this.resetUserState();
       localStorage.removeItem("user");
       navigate("/login");
+    }
+  };
+
+  checkAuthStatus = async () => {
+    this.setIsLoading(true);
+    try {
+      const { data } = await axiosInstance.get("/api/auth/check"); // Предполагаемый эндпоинт
+      if (data?.success) {
+        this.setUser(data);
+        localStorage.setItem("user", JSON.stringify({
+          success: true,
+          username: data.username,
+          email: data.email,
+          roles: data.roles,
+          nickname: data.nickname,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthDate: data.birthDate,
+          avatar: data.avatar
+        }));
+      } else {
+        this.setIsAuthenticated(false);
+        localStorage.removeItem("user");
+      }
+    } catch (err) {
+      this.setIsAuthenticated(false);
+      localStorage.removeItem("user");
+      console.error("Ошибка проверки статуса аутентификации:", err);
+    } finally {
+      this.setIsLoading(false);
     }
   };
 
@@ -153,9 +221,6 @@ class UserStore {
     this.setBirthDate("");
     this.setAvatar("");
   };
-
-  
 }
-
 
 export const userStore = new UserStore();

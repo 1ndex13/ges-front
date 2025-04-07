@@ -35,12 +35,15 @@ export const updateProduct = async (id, formData) => {
     throw error;
   }
 };
+
 export const deleteProduct = async (productId) => {
   try {
-    const response = await axiosInstance.delete(`/api/products/${productId}`);
+    const response = await axiosInstance.delete(`/api/products/${productId}`, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
     return response.data;
   } catch (error) {
     console.error("Ошибка при удалении товара:", error);
     throw error;
-  }
+};
 };
