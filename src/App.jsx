@@ -12,38 +12,18 @@ import { Login } from "./components/Main/Login/Login";
 import { Profile } from "./components/Main/Profile/Profile";
 import { ForgotPassword } from "./components/Main/ForgotPassword/ForgotPassword";
 import { MyServices } from "./components/Main/MyServices/MyServices";
+import { AdminServices } from "./components/Main/Admin/AdminServices"; // Новый компонент
 import { userStore } from "./api/UserStore";
 import { ServicesProvider } from "./components/Main/Catalog/ServicesContext";
 import { AdminUsers } from "./components/Main/Admin/AdminUsers";
 
 function App() {
-  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        await userStore.checkAuthStatus();
-        if (userStore.isAuthenticated) {
-          await userStore.loadFullProfile();
-        }
-      } catch (error) {
-        console.error("Ошибка инициализации приложения:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initializeApp();
-  }, []);
+  const isAdmin = userStore.roles.includes("ADMIN");
 
   const handleLogout = () => {
     userStore.logout(navigate);
   };
-
-  if (isLoading) {
-    return <div className="loading-screen">Загрузка...</div>;
-  }
 
   return (
     <ServicesProvider>
@@ -52,18 +32,15 @@ function App() {
         <Route path="/about" element={<AboutUs />} />
         <Route
           path="/catalog"
-          element={
-            <Catalog
-              isAuthenticated={userStore.isAuthenticated}
-              userRole={userStore.roles}
-            />
-          }
+          element={<Catalog isAuthenticated={userStore.isAuthenticated} userRole={userStore.roles} />}
         />
         <Route
           path="/admin/users"
-          element={
-            userStore.roles.includes("ADMIN") ? <AdminUsers /> : <Navigate to="/" />
-          }
+          element={isAdmin ? <AdminUsers /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/admin/services"
+          element={isAdmin ? <AdminServices /> : <Navigate to="/" />}
         />
         <Route
           path="/catalog/:id"

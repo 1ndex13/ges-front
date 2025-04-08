@@ -38,6 +38,11 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.serviceItem p{
+  margin-top: -10px;
+  font-weight: 300;
+}
+
 .serviceItem:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
@@ -208,14 +213,3 @@
   margin-bottom: 15px;
   font-size: 0.9rem;
 }
-
-.container {
-  font-family: "Oswald", sans-serif;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  position: relative; /* Добавлено для корректного позиционирования */
-  z-index: 1; /* Убедитесь, что контент ниже модального окна */
-}
-
-

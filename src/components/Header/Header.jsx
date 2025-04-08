@@ -4,7 +4,6 @@ import style from "./Header.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import { userStore } from "../../api/UserStore";
 
-
 export const Header = observer(() => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -17,7 +16,6 @@ export const Header = observer(() => {
     userStore.logout(navigate);
   };
 
-  // Проверка роли администратора
   const isAdmin = userStore.roles.includes("ADMIN");
 
   return (
@@ -28,7 +26,11 @@ export const Header = observer(() => {
           <Link to="/catalog">Каталог</Link>
           {userStore.isAuthenticated && (
             <>
-              <Link to="/my-services">Мои услуги</Link>
+              {isAdmin ? (
+                <Link to="/admin/services">Заказы</Link>
+              ) : (
+                <Link to="/my-services">Мои услуги</Link>
+              )}
             </>
           )}
           <Link to="/">Global Energy Solution</Link>
