@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import style from "./Catalog.module.css";
 import { EditProductForm } from "./EditProductForm";
 import { getProducts, addProduct, updateProduct, deleteProduct } from "../../../api/api";
@@ -11,9 +11,22 @@ export const Catalog = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("Все");
   const cardsPerPage = 6;
   const { addService } = useServices();
   const baseUrl = "http://localhost:8080";
+
+  // Динамические категории из поля category
+  const categories = useMemo(() => {
+    return ["Все", ...new Set(cards.map((card) => card.category).filter(Boolean))];
+  }, [cards]);
+
+  // Фильтрация карточек по category
+  const filteredCards = useMemo(() => {
+    return selectedCategory === "Все"
+      ? cards
+      : cards.filter((card) => card.category === selectedCategory);
+  }, [cards, selectedCategory]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -58,6 +71,7 @@ export const Catalog = () => {
       const formData = new FormData();
       formData.append("title", newProductData.title);
       formData.append("description", newProductData.description);
+      formData.append("category", newProductData.category); // Добавляем категорию
       if (newProductData.image) {
         formData.append("image", newProductData.image);
       }
@@ -66,29 +80,36 @@ export const Catalog = () => {
       console.log("Added product from server:", addedProduct);
       setCards((prev) => [...prev, addedProduct]);
       setEditingProduct(null);
-      setCurrentPage(Math.ceil((cards.length + 1) / cardsPerPage));
+      setCurrentPage(Math.ceil((filteredCards.length + 1) / cardsPerPage));
     } catch (error) {
       console.error("Ошибка при добавлении товара:", error);
     }
   };
 
   const handleDeleteProduct = async (index) => {
-    const productId = cards[index].id;
+    const productId = filteredCards[index].id;
     try {
       await deleteProduct(productId);
-      setCards((prev) => prev.filter((_, i) => i !== index));
+      setCards((prev) => prev.filter((card) => card.id !== productId));
     } catch (error) {
       console.error("Ошибка при удалении товара:", error);
     }
   };
 
   const handleEditProduct = async (updatedProduct) => {
-    const index = cards.findIndex(card => card.id === editingProduct.id);
+    const index = cards.findIndex((card) => card.id === editingProduct.id);
     const productId = cards[index].id;
     try {
-      await updateProduct(productId, updatedProduct);
+      const formData = new FormData();
+      formData.append("title", updatedProduct.title);
+      formData.append("description", updatedProduct.description);
+      formData.append("category", updatedProduct.category); // Добавляем категорию
+      if (updatedProduct.image) {
+        formData.append("image", updatedProduct.image);
+      }
+      const updated = await updateProduct(productId, formData);
       setCards((prev) =>
-        prev.map((card, i) => (i === index ? { ...card, ...updatedProduct } : card))
+        prev.map((card, i) => (i === index ? { ...card, ...updated } : card))
       );
       setEditingProduct(null);
     } catch (error) {
@@ -105,9 +126,10 @@ export const Catalog = () => {
     });
   };
 
+  // Пагинация
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = cards.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCards = filteredCards.slice(indexOfFirstCard, indexOfLastCard);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -116,6 +138,24 @@ export const Catalog = () => {
       <main>
         <div className={style.container}>
           <div className={style.Actually}>Наша продукция</div>
+
+          {/* Фильтр по категориям */}
+          <div className={style.filterContainer}>
+            <select
+              className={style.filterSelect}
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              {categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {isAuthenticated && userRole.includes("ADMIN") && (
             <button
@@ -171,7 +211,7 @@ export const Catalog = () => {
             ))}
           </div>
           <div className={style.pagination}>
-            {Array.from({ length: Math.ceil(cards.length / cardsPerPage) }, (_, i) => (
+            {Array.from({ length: Math.ceil(filteredCards.length / cardsPerPage) }, (_, i) => (
               <button
                 key={i + 1}
                 onClick={() => paginate(i + 1)}
@@ -190,7 +230,7 @@ export const Catalog = () => {
             product={editingProduct === undefined ? null : editingProduct}
             onSave={editingProduct === undefined ? handleAddProduct : handleEditProduct}
             onCancel={() => setEditingProduct(null)}
-            onAddProduct={handleAddProduct} // Оставляем для совместимости
+            onAddProduct={handleAddProduct}
           />
         </div>
       )}

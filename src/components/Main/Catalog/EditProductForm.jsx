@@ -6,6 +6,7 @@ import { addProduct, updateProduct } from "../../../api/api";
 export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => {
   const [title, setTitle] = useState(product?.title || "");
   const [description, setDescription] = useState(product?.description || "");
+  const [category, setCategory] = useState(product?.category || ""); // Новое поле
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(product?.imgSrc || "");
   const [error, setError] = useState(null);
@@ -24,14 +25,15 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
   });
 
   const handleSave = async () => {
-    if (!title || !description) {
-      setError("Название и описание обязательны для заполнения");
+    if (!title || !description || !category) {
+      setError("Название, описание и категория обязательны для заполнения");
       return;
     }
 
     const newProductData = {
       title,
       description,
+      category, // Добавляем категорию
       image: imageFile,
     };
 
@@ -40,17 +42,18 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
+        formData.append("category", category); // Отправляем категорию
         if (imageFile) {
           formData.append("image", imageFile);
         }
         await updateProduct(product.id, formData);
-        onSave({ title, description, imgSrc: imageFile ? previewUrl : product.imgSrc });
+        onSave({ title, description, category, imgSrc: imageFile ? previewUrl : product.imgSrc });
       } else {
-        // Добавление
-        await onAddProduct(newProductData); // Вызываем только onAddProduct
+        await onAddProduct(newProductData);
       }
       setTitle("");
       setDescription("");
+      setCategory(""); // Очищаем категорию
       setImageFile(null);
       setPreviewUrl("");
       setError(null);
@@ -81,6 +84,16 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className={style.edit_form_textarea}
+            />
+          </label>
+          <label className={style.edit_form_label}>
+            Категория:
+            <input
+              type="text"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className={style.edit_form_input}
+              placeholder="Например, Бурение"
             />
           </label>
           <label className={style.edit_form_label}>

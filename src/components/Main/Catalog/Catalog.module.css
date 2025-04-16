@@ -262,4 +262,26 @@
     transform: translateY(-2px);
 }
 
-
+/* Существующие стили для фильтра */
+.filterContainer {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .filterSelect {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    min-width: 200px;
+  }
+  
+  .filterSelect:focus {
+    outline: none;
+    border-color: #aab9c9;
+  }
+  

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import style from "../MyServices/MyServices.module.css";
+import Chart from "chart.js/auto";
 
 export const AdminServices = () => {
   const [orders, setOrders] = useState([]);
+  const [statistics, setStatistics] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  let chartInstance = null; // Переменная для хранения экземпляра диаграммы
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -21,19 +24,109 @@ export const AdminServices = () => {
         setLoading(false);
       }
     };
+
+    const fetchStatistics = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/api/admin/orders/statistics", {
+          withCredentials: true,
+        });
+        setStatistics(response.data);
+      } catch (err) {
+        setError("Ошибка при загрузке статистики");
+        console.error(err);
+      }
+    };
+
     fetchOrders();
+    fetchStatistics();
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(statistics).length > 0 && !loading) {
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      const ctx = document.getElementById("orderChart").getContext("2d");
+      chartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: Object.keys(statistics),
+          datasets: [
+            {
+              label: "Количество заказов",
+              data: Object.values(statistics),
+              backgroundColor: "#AAB9C9",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "Количество заказов",
+                font:{
+                  family: "Oswald",
+                  weight: 300,
+                }
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: "Услуги",
+                font:{
+                  family: "Oswald",
+                  weight: 300,
+                }
+              },
+            },
+          },
+          plugins: {
+            legend: {
+              position: "top",
+            },
+            title: {
+              display: true,
+              text: "Статистика заказов по услугам",
+              font: {
+                family: "Oswald",
+                size: 18,
+                weight: 300,
+              },
+            },
+          },
+        },
+      });
+    }
+
+    // Очистка при размонтировании компонента
+    return () => {
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+    };
+  }, [statistics, loading]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       await axios.put(
         `http://localhost:8080/api/admin/orders/${orderId}/status`,
-        { status: newStatus },
-        { withCredentials: true }
+        newStatus,
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
-      setOrders(orders.map(order =>
+      setOrders(orders.map((order) =>
         order.id === orderId ? { ...order, status: newStatus } : order
       ));
+      // Обновляем статистику после изменения статуса
+      const response = await axios.get("http://localhost:8080/api/admin/orders/statistics", {
+        withCredentials: true,
+      });
+      setStatistics(response.data);
     } catch (err) {
       setError("Ошибка при обновлении статуса");
       console.error(err);
@@ -45,12 +138,19 @@ export const AdminServices = () => {
 
   return (
     <div className={style.container}>
-      <h1>Статистика услуг</h1>
+      <h1>Заказы</h1>
+
+      {/* Диаграмма */}
+      <div style={{ height: "400px", marginBottom: "40px" }}>
+        <canvas id="orderChart"></canvas>
+      </div>
+
+      {/* Список заказов */}
       {orders.length === 0 ? (
         <p>Нет заказанных услуг.</p>
       ) : (
         <ul className={style.serviceList}>
-          {orders.map(order => (
+          {orders.map((order) => (
             <li key={order.id} className={style.serviceItem}>
               <div className={style.serviceContent}>
                 <h3>{order.service}</h3>
@@ -75,3 +175,4 @@ export const AdminServices = () => {
   );
 };
 
+export default AdminServices;
