@@ -35,6 +35,7 @@
     padding-left: 30px;
 }
 
+
 .oliman h4 {
     padding-top: 20px;
     font-weight: 400;
@@ -52,6 +53,7 @@
     font-weight: 300;
     font-size: 1.125rem; /* 18px */
     width: 85%;
+    
     max-width: 600px;
     margin-top: 10px;
 }

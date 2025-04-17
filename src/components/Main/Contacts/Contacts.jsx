@@ -97,7 +97,7 @@ export const Contacts = () => {
               Вконтакте <img src="/vk.png" alt="VK" />
             </a>
             <a href="#" className={style.socialLink}>
-              WhatsApp <img src="/youtube.png" alt="WhatsApp" />
+              WhatsApp <img src="/whatsapp.png" alt="WhatsApp" />
             </a>
             <button onClick={handleOrderClick} className={style.socialLink}>
               Оставить отзыв

@@ -1,8 +1,10 @@
+
 import { useState, useEffect, useMemo } from "react";
 import style from "./Catalog.module.css";
 import { EditProductForm } from "./EditProductForm";
 import { getProducts, addProduct, updateProduct, deleteProduct } from "../../../api/api";
 import { useServices } from "./ServicesContext";
+import { message } from "antd";
 
 export const Catalog = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -12,8 +14,9 @@ export const Catalog = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Все");
+  const [addingServiceId, setAddingServiceId] = useState(null); // Состояние для отслеживания добавляемого товара
   const cardsPerPage = 6;
-  const { addService } = useServices();
+  const { addService, services } = useServices();
   const baseUrl = "http://localhost:8080";
 
   // Динамические категории из поля category
@@ -40,20 +43,20 @@ export const Catalog = () => {
 
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/auth/check', {
-          method: 'GET',
-          credentials: 'include',
+        const response = await fetch("http://localhost:8080/api/auth/check", {
+          method: "GET",
+          credentials: "include",
         });
         const data = await response.json();
-        console.log('Auth data:', data);
+        console.log("Auth data:", data);
         if (data.success) {
           setIsAuthenticated(true);
           setUserRole(data.roles || []);
-          console.log('User roles set to:', data.roles);
+          console.log("User roles set to:", data.roles);
         } else {
           setIsAuthenticated(false);
           setUserRole([]);
-          console.log('Auth failed:', data.message);
+          console.log("Auth failed:", data.message);
         }
       } catch (error) {
         console.error("Ошибка проверки аутентификации:", error);
@@ -71,7 +74,7 @@ export const Catalog = () => {
       const formData = new FormData();
       formData.append("title", newProductData.title);
       formData.append("description", newProductData.description);
-      formData.append("category", newProductData.category); // Добавляем категорию
+      formData.append("category", newProductData.category);
       if (newProductData.image) {
         formData.append("image", newProductData.image);
       }
@@ -103,7 +106,7 @@ export const Catalog = () => {
       const formData = new FormData();
       formData.append("title", updatedProduct.title);
       formData.append("description", updatedProduct.description);
-      formData.append("category", updatedProduct.category); // Добавляем категорию
+      formData.append("category", updatedProduct.category);
       if (updatedProduct.image) {
         formData.append("image", updatedProduct.image);
       }
@@ -117,13 +120,29 @@ export const Catalog = () => {
     }
   };
 
-  const handleAddToServices = (card) => {
-    addService({
-      id: card.id,
-      title: card.title,
-      description: card.description,
-      imgSrc: card.imgSrc,
-    });
+  const handleAddToServices = async (card) => {
+    // Проверка, есть ли товар в услугах
+    const isAlreadyAdded = services.some((service) => service.id === card.id);
+    if (isAlreadyAdded) {
+      message.info("Этот товар уже добавлен в Мои услуги");
+      return;
+    }
+
+    setAddingServiceId(card.id);
+    try {
+      await addService({
+        id: card.id,
+        title: card.title,
+        description: card.description,
+        imgSrc: card.imgSrc,
+      });
+      message.success("Товар успешно добавлен в Мои услуги!");
+    } catch (error) {
+      console.error("Ошибка при добавлении услуги:", error);
+      message.error("Ошибка при добавлении товара в Мои услуги");
+    } finally {
+      setTimeout(() => setAddingServiceId(null), 1000);
+    }
   };
 
   // Пагинация
@@ -167,59 +186,76 @@ export const Catalog = () => {
           )}
 
           <div className={style.cards}>
-            {currentCards.map((card, index) => (
-              <div
-                key={card.id}
-                className={`${style.card} ${hoveredIndex === index ? style.flipped : ''}`}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                <div className={style.front}>
-                  {card.imgSrc ? (
-                    <img src={`${baseUrl}${card.imgSrc}`} alt={card.title} />
-                  ) : (
-                    <p>Изображение отсутствует</p>
-                  )}
+            {currentCards.map((card, index) => {
+              const isAlreadyAdded = services.some((service) => service.id === card.id);
+              return (
+                <div
+                  key={card.id}
+                  className={`${style.card} ${hoveredIndex === index ? style.flipped : ""}`}
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
+                  <div className={style.front}>
+                    {card.imgSrc ? (
+                      <img src={`${baseUrl}${card.imgSrc}`} alt={card.title} />
+                    ) : (
+                      <p>Изображение отсутствует</p>
+                    )}
+                  </div>
+                  <div className={style.back}>
+                    <h3>{card.title}</h3>
+                    <p>{card.description}</p>
+                    <button
+                      onClick={() => handleAddToServices(card)}
+                      className={`${style.addServiceButton} ${
+                        addingServiceId === card.id
+                          ? style.adding
+                          : isAlreadyAdded
+                          ? style.added
+                          : ""
+                      }`}
+                      disabled={addingServiceId === card.id || isAlreadyAdded}
+                    >
+                      {addingServiceId === card.id
+                        ? "Добавлено"
+                        : isAlreadyAdded
+                        ? "Уже добавлено"
+                        : "Добавить услугу"}
+                    </button>
+                    {isAuthenticated && userRole.includes("ADMIN") && (
+                      <div className={style.adminControls}>
+                        <button
+                          onClick={() => setEditingProduct(card)}
+                          className={style.editButton}
+                        >
+                          Редактировать
+                        </button>
+                        <button
+                          onClick={() => handleDeleteProduct(index)}
+                          className={style.deleteButton}
+                        >
+                          Удалить
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className={style.back}>
-                  <h3>{card.title}</h3>
-                  <p>{card.description}</p>
-                  <button
-                    onClick={() => handleAddToServices(card)}
-                    className={style.addServiceButton}
-                  >
-                    Добавить услугу
-                  </button>
-                  {isAuthenticated && userRole.includes("ADMIN") && (
-                    <div className={style.adminControls}>
-                      <button
-                        onClick={() => setEditingProduct(card)}
-                        className={style.editButton}
-                      >
-                        Редактировать
-                      </button>
-                      <button
-                        onClick={() => handleDeleteProduct(index)}
-                        className={style.deleteButton}
-                      >
-                        Удалить
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className={style.pagination}>
-            {Array.from({ length: Math.ceil(filteredCards.length / cardsPerPage) }, (_, i) => (
-              <button
-                key={i + 1}
-                onClick={() => paginate(i + 1)}
-                className={currentPage === i + 1 ? style.active : style.pageButton}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {Array.from(
+              { length: Math.ceil(filteredCards.length / cardsPerPage) },
+              (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => paginate(i + 1)}
+                  className={currentPage === i + 1 ? style.active : style.pageButton}
+                >
+                  {i + 1}
+                </button>
+              )
+            )}
           </div>
         </div>
       </main>

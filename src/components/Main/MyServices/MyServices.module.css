@@ -59,6 +59,11 @@
   flex: 1;
 }
 
+.serviceContent p{
+  display: flex;
+  justify-content: flex-start;
+}
+
 .serviceContent h1 {
   margin: 0;
   font-weight: 600;
@@ -212,4 +217,73 @@
   color: #dc3545;
   margin-bottom: 15px;
   font-size: 0.9rem;
+}
+
+
+/* Дополнение к существующим стилям в MyServices.module.css */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pagination .ant-pagination-item {
+  font-family: "Oswald", sans-serif;
+  font-size: 14px;
+}
+
+.pagination .ant-pagination-item-active {
+  background-color: #29a5d6;
+  border-color: #29a5d6;
+}
+
+.pagination .ant-pagination-item-active a {
+  color: #fff;
+}
+
+.pagination .ant-pagination-prev,
+.pagination .ant-pagination-next,
+.pagination .ant-pagination-jump-prev,
+.pagination .ant-pagination-jump-next {
+  font-family: "Oswald", sans-serif;
+  font-size: 14px;
+}
+
+.pagination .ant-select {
+  font-family: "Oswald", sans-serif;
+}
+
+.pagination .ant-select-selector {
+  font-size: 14px;
+  border: 1px solid #aab9c9;
+  border-radius: 5px;
+}
+
+/* Медиа-запросы для пагинации */
+@media (max-width: 768px) {
+  .pagination {
+      justify-content: center;
+  }
+
+  .pagination .ant-pagination-item,
+  .pagination .ant-pagination-prev,
+  .pagination .ant-pagination-next {
+      font-size: 12px;
+  }
+
+  .pagination .ant-select-selector {
+      font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination .ant-pagination-item,
+  .pagination .ant-pagination-prev,
+  .pagination .ant-pagination-next {
+      font-size: 11px;
+  }
+
+  .pagination .ant-select-selector {
+      font-size: 11px;
+  }
 }

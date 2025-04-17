@@ -3,11 +3,14 @@
 /* Общие стили */
 * {
     font-family: "Oswald", sans-serif;
+    box-sizing: border-box; /* Упрощает работу с отступами и размерами */
 }
 
 .container {
-    width: 1440px;
+    max-width: 1440px; /* Ограничим максимальную ширину */
+    width: 100%; /* Адаптивная ширина */
     margin: 0 auto;
+    padding: 0 15px; /* Отступы для маленьких экранов */
 }
 
 .Actually {
@@ -21,6 +24,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
     margin-bottom: 30px;
+    gap: 20px; /* Добавим gap для равномерных отступов */
 }
 
 .card {
@@ -29,6 +33,7 @@
     width: 450px;
     height: 260px;
     margin-bottom: 20px;
+    flex: 0 0 calc(33.33% - 20px); /* 3 карточки в ряд с учетом gap */
 }
 
 .card .front,
@@ -83,12 +88,14 @@
 .back h3 {
     font-weight: 400;
     margin-top: -20px;
+    font-size: 20px; /* Уточним размер шрифта */
 }
 
 .back p {
     margin-top: -10px;
     font-weight: 300;
-    width: 350px;
+    width: 90%; /* Уменьшим ширину текста */
+    font-size: 16px;
 }
 
 .back a {
@@ -105,6 +112,7 @@
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    gap: 10px;
 }
 
 .pagination button,
@@ -186,7 +194,8 @@
 
 /* Форма редактирования */
 .edit_form_container {
-    width: 450px;
+    width: 100%;
+    max-width: 450px;
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 30px;
@@ -213,7 +222,7 @@
 
 .edit_form_input,
 .edit_form_textarea {
-    width: 430px;
+    width: 100%;
     padding: 8px 12px;
     margin-top: 5px;
     border: 1px solid #aab9c9;
@@ -262,14 +271,14 @@
     transform: translateY(-2px);
 }
 
-/* Существующие стили для фильтра */
+/* Фильтр */
 .filterContainer {
     margin-bottom: 20px;
     display: flex;
     justify-content: flex-start;
-  }
-  
-  .filterSelect {
+}
+
+.filterSelect {
     padding: 8px 12px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -277,11 +286,178 @@
     background-color: #fff;
     cursor: pointer;
     transition: border-color 0.3s ease;
-    min-width: 200px;
-  }
-  
-  .filterSelect:focus {
+    width: 100%;
+    max-width: 200px;
+}
+
+.filterSelect:focus {
     outline: none;
     border-color: #aab9c9;
-  }
-  
+}
+
+/* Модальное окно */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Медиа-запросы для адаптивности */
+
+/* Планшеты (ширина до 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+
+    .card {
+        flex: 0 0 calc(50% - 20px); /* 2 карточки в ряд */
+        width: 100%;
+        height: 220px; /* Уменьшим высоту */
+    }
+
+    .back p {
+        font-size: 14px;
+        width: 80%;
+    }
+
+    .back h3 {
+        font-size: 18px;
+    }
+
+    .Actually {
+        font-size: 20px;
+    }
+
+    .pagination button,
+    .addServiceButton,
+    .editButton,
+    .deleteButton,
+    .edit_form_save,
+    .edit_form_cancel {
+        padding: 6px 15px;
+        font-size: 14px;
+    }
+
+    .filterSelect {
+        max-width: 180px;
+        font-size: 14px;
+    }
+}
+
+/* Мобильные устройства (ширина до 768px) */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .card {
+        flex: 0 0 100%; /* 1 карточка в ряд */
+        width: 100%;
+        height: 200px;
+        margin-bottom: 15px;
+    }
+
+    .back p {
+        font-size: 13px;
+        width: 90%;
+    }
+
+    .back h3 {
+        font-size: 16px;
+    }
+
+    .Actually {
+        font-size: 18px;
+        margin: 20px 0 10px;
+    }
+
+    .pagination {
+        gap: 5px;
+    }
+
+    .pagination button,
+    .addServiceButton,
+    .editButton,
+    .deleteButton,
+    .edit_form_save,
+    .edit_form_cancel {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .filterContainer {
+        justify-content: center;
+    }
+
+    .filterSelect {
+        max-width: 100%;
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .edit_form_container {
+        padding: 15px;
+    }
+
+    .edit_form_input,
+    .edit_form_textarea {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    .edit_form_container h2 {
+        font-size: 16px;
+    }
+
+    .adminControls {
+        gap: 10px;
+    }
+}
+
+/* Очень маленькие экраны (ширина до 480px) */
+@media (max-width: 480px) {
+    .card {
+        height: 180px;
+    }
+
+    .back p {
+        font-size: 12px;
+    }
+
+    .back h3 {
+        font-size: 14px;
+    }
+
+    .Actually {
+        font-size: 16px;
+    }
+
+    .pagination button,
+    .addServiceButton,
+    .editButton,
+    .deleteButton,
+    .edit_form_save,
+    .edit_form_cancel {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .filterSelect {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+
+    .edit_form_input,
+    .edit_form_textarea {
+        font-size: 12px;
+    }
+}

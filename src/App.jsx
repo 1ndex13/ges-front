@@ -4,6 +4,7 @@ import { Header } from "./components/Header/Header";
 import { FullCard } from "./components/Main/CatalogCard/FullCard";
 import { MainContent } from "./components/Main/MainContent/MainContent";
 import { Register } from "./components/Main/Register/Register";
+import { LoadingScreen } from "./components/Loading/LoadingScreen";
 import { Footer } from "./components/Footer/Footer";
 import { AboutUs } from "./components/Main/AboutUs/AboutUs";
 import { Catalog } from "./components/Main/Catalog/Catalog";
@@ -20,14 +21,28 @@ import { AdminUsers } from "./components/Main/Admin/AdminUsers";
 function App() {
   const navigate = useNavigate();
   const isAdmin = userStore.roles.includes("ADMIN");
+  const [isLoading, setIsLoading] = useState(true);
+
 
   const handleLogout = () => {
     userStore.logout(navigate);
   };
 
+
+  useEffect(() => {
+    // Имитация загрузки приложения (например, загрузка данных или ресурсов)
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2500); // Загрузка 2.5 секунды (синхронизировано с анимацией fadeOut)
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <ServicesProvider>
+      
       <Header isAuthenticated={userStore.isAuthenticated} onLogout={handleLogout} />
+      {isLoading && <LoadingScreen />}
       <Routes>
         <Route path="/about" element={<AboutUs />} />
         <Route

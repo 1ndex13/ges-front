@@ -1,103 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
 
-.container{
-    font-family: "Oswald", serif;
+/* Общие стили */
+* {
+    font-family: "Oswald", sans-serif;
+    box-sizing: border-box;
+}
+
+/* Контейнер */
+.container {
+    max-width: 1440px; /* Ограничим максимальную ширину */
+    width: 100%; /* Адаптивная ширина */
     margin: 0 auto;
-    max-width: 1440px;
+    padding: 0 15px; /* Отступы для маленьких экранов */
     margin-top: 10px;
 }
 
-.container img{
-    margin-top: 10px;
-    width: 1440px;
-}
-
-.container h1{
-    margin-top: 50px;
+.container h1 {
     font-weight: 400;
-    width: 700px;
+    font-size: 24px; /* Уточним размер шрифта */
+    margin: 50px 0 20px;
+    max-width: 700px; /* Ограничим ширину заголовка */
 }
 
-.Actually{
-  font-size: 24px;
-  font-weight: 300;
-  margin-top: 50px;
-  margin-bottom: 20px;
-}
-
-.container p{ 
-
+.container p {
     font-size: 22px;
     font-weight: 300;
+    margin: 0 0 20px;
 }
 
-
-.card {
-  margin-top: 20px;
-  cursor: pointer;
-    position: relative; /* Для позиционирования дочерних элементов */
-    width: 450px; /* Ширина карточки */
-    height: 300px; /* Высота карточки */
-    overflow: hidden; /* Скрываем переполнение */
-    border-radius: 10px; /* Закругленные углы */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
-    transition: transform 0.3s; /* Плавный переход при масштабировании */
-  }
-  
-  .card img{
-    position: relative;
-    top: -10px;
-    border-radius: 10px;
-    width: 450px;
-    height: 300px;
-  }
-  .card:hover {
-    transform: scale(1.05); /* Увеличиваем карточку при наведении */
-  }
-  
-  .overlay {
-    position: absolute; /* Абсолютное позиционирование для наложения текста */
-    bottom: -80px; /* Начальная позиция текста (снизу) */
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный фон */
-    color: white; /* Цвет текста */
-    display: flex; /* Flexbox для центрирования текста */
-    flex-direction: column; /* Вертикальное расположение текста */
-    align-items: center; /* Центрируем по горизонтали */
-    justify-content: center; /* Центрируем по вертикали */
-    transition: bottom 0.3s ease-in-out; /* Плавный переход для поднятия текста */
-  }
-  
-  .overlay.show {
-    bottom: 0px; /* Конечная позиция текста (приблизительно на расстоянии от низа) */
-  }
-   
-  .card p{
-    font-size: 18px;
-    width: 400px;
-  }
-  
-.cards{
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+.Actually {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 50px 0 20px;
 }
 
-
+/* Слайдер */
 .sliderContainer {
-    top: 30px;
-    font-family: "Oswald", sans-serif;
     position: relative;
     max-width: 1440px;
-    margin: auto;
+    width: 100%;
+    margin: 30px auto 0;
     overflow: hidden;
     border-radius: 10px;
     box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
-}
-
-.slideContent h2{
-  font-weight: 400;
 }
 
 .slider {
@@ -109,19 +54,24 @@
     width: 100%;
     height: auto;
     border-radius: 10px;
+    display: block; /* Уберем лишние пробелы под изображением */
 }
 
 .slideContent {
-  text-shadow: 0px 3px 3px rgba(71, 71, 71, 0.5);
     position: absolute;
     bottom: 20px;
     left: 20px;
     color: white;
     background-color: #aab9c9;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 10px 15px;
     border-radius: 5px;
+    text-shadow: 0px 3px 3px rgba(71, 71, 71, 0.5);
+}
+
+.slideContent h2 {
     font-weight: 400;
+    font-size: 24px;
+    margin: 0;
 }
 
 .prevButton,
@@ -137,6 +87,11 @@
     border-radius: 50%;
     font-size: 12px;
     width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
 }
 
 .prevButton {
@@ -152,3 +107,228 @@
     background-color: #aac5e2;
 }
 
+/* Карточки */
+.cards {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px; /* Равномерные отступы между карточками */
+}
+
+.card {
+    position: relative;
+    width: 450px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    flex: 0 0 calc(33.33% - 20px); /* 3 карточки в ряд с учетом gap */
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Убедимся, что изображение заполняет карточку */
+    border-radius: 10px;
+}
+
+.overlay {
+    position: absolute;
+    bottom: -80px;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: bottom 0.3s ease-in-out;
+    padding: 10px;
+}
+
+.overlay.show {
+    bottom: 0;
+}
+
+.overlay h3 {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 0 0 5px;
+}
+
+.overlay p {
+    font-size: 16px;
+    font-weight: 300;
+    margin: 0;
+    width: 90%; /* Ограничим ширину текста */
+    text-align: center;
+}
+
+/* Медиа-запросы для адаптивности */
+
+/* Планшеты (ширина до 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 20px;
+    }
+
+    .container h1 {
+        font-size: 20px;
+        max-width: 100%;
+    }
+
+    .container p {
+        font-size: 18px;
+    }
+
+    .Actually {
+        font-size: 20px;
+        margin: 40px 0 15px;
+    }
+
+    .sliderContainer {
+        margin: 20px auto 0;
+    }
+
+    .slideContent h2 {
+        font-size: 20px;
+    }
+
+    .prevButton,
+    .nextButton {
+        width: 30px;
+        height: 30px;
+        font-size: 10px;
+    }
+
+    .card {
+        flex: 0 0 calc(50% - 20px); /* 2 карточки в ряд */
+        width: 100%;
+        height: 250px;
+    }
+
+    .card img {
+        width: 100%;
+        height: 100%;
+    }
+
+    .overlay h3 {
+        font-size: 16px;
+    }
+
+    .overlay p {
+        font-size: 14px;
+    }
+}
+
+/* Мобильные устройства (ширина до 768px) */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .container h1 {
+        font-size: 18px;
+        margin: 30px 0 15px;
+    }
+
+    .container p {
+        font-size: 16px;
+    }
+
+    .Actually {
+        font-size: 18px;
+        margin: 30px 0 10px;
+    }
+
+    .sliderContainer {
+        margin: 15px auto 0;
+    }
+
+    .slideContent {
+        bottom: 10px;
+        left: 10px;
+        padding: 8px 12px;
+    }
+
+    .slideContent h2 {
+        font-size: 16px;
+    }
+
+    .prevButton,
+    .nextButton {
+        width: 25px;
+        height: 25px;
+        font-size: 8px;
+    }
+
+    .card {
+        flex: 0 0 100%; /* 1 карточка в ряд */
+        width: 100%;
+        height: 200px;
+        margin-bottom: 15px;
+    }
+
+    .overlay h3 {
+        font-size: 14px;
+    }
+
+    .overlay p {
+        font-size: 12px;
+    }
+}
+
+/* Очень маленькие экраны (ширина до 480px) */
+@media (max-width: 480px) {
+    .container h1 {
+        font-size: 16px;
+        margin: 20px 0 10px;
+    }
+
+    .container p {
+        font-size: 14px;
+    }
+
+    .Actually {
+        font-size: 16px;
+        margin: 20px 0 10px;
+    }
+
+    .sliderContainer {
+        margin: 10px auto 0;
+    }
+
+    .slideContent {
+        padding: 6px 10px;
+    }
+
+    .slideContent h2 {
+        font-size: 14px;
+    }
+
+    .prevButton,
+    .nextButton {
+        width: 20px;
+        height: 20px;
+        font-size: 6px;
+    }
+
+    .card {
+        height: 180px;
+    }
+
+    .overlay h3 {
+        font-size: 12px;
+    }
+
+    .overlay p {
+        font-size: 11px;
+    }
+}

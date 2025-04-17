@@ -1,6 +1,223 @@
-.admin_users{
-    padding-top: 30px;
-    margin: 0 auto;
-    width: 1440px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
+
+/* Общие стили */
+* {
+    font-family: "Oswald", sans-serif;
+    box-sizing: border-box;
 }
 
+/* Основной контейнер */
+.admin_users {
+    max-width: 1440px; /* Ограничим максимальную ширину */
+    width: 100%; /* Адаптивная ширина */
+    margin: 0 auto;
+    padding: 30px 15px 0; /* Отступы сверху и по бокам */
+}
+
+/* Контейнер для контента */
+.container {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Заголовок */
+h1 {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 0 0 20px;
+}
+
+/* Диаграмма */
+.chartContainer {
+    height: 400px; /* Фиксированная высота для десктопов */
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+/* Список заказов */
+.serviceList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.serviceItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #aab9c9;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    flex-wrap: wrap; /* Позволяет перенос на маленьких экранах */
+}
+
+.serviceContent {
+    flex: 1;
+    min-width: 200px;
+}
+
+.serviceContent h3 {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 0 0 10px;
+}
+
+.serviceContent p {
+    font-size: 14px;
+    font-weight: 300;
+    margin: 5px 0;
+}
+
+.serviceActions {
+    display: flex;
+    align-items: center;
+}
+
+.serviceActions select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #aab9c9;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    min-width: 150px;
+}
+
+.serviceActions select:focus {
+    outline: none;
+    border-color: #29a5d6;
+}
+
+/* Сообщения */
+p {
+    font-size: 16px;
+    font-weight: 300;
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Медиа-запросы для адаптивности */
+
+/* Планшеты (ширина до 1024px) */
+@media (max-width: 1024px) {
+    .admin_users {
+        padding: 20px 20px 0;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .chartContainer {
+        height: 300px; /* Уменьшим высоту диаграммы */
+    }
+
+    .serviceItem {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .serviceActions select {
+        min-width: 120px;
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .serviceContent h3 {
+        font-size: 16px;
+    }
+
+    .serviceContent p {
+        font-size: 13px;
+    }
+}
+
+/* Мобильные устройства (ширина до 768px) */
+@media (max-width: 768px) {
+    .admin_users {
+        padding: 15px 15px 0;
+    }
+
+    h1 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .chartContainer {
+        height: 250px; /* Еще меньше для мобильных */
+    }
+
+    .serviceItem {
+        padding: 10px;
+    }
+
+    .serviceContent {
+        min-width: 100%;
+    }
+
+    .serviceActions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .serviceActions select {
+        width: 100%;
+        min-width: auto;
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+
+    .serviceContent h3 {
+        font-size: 14px;
+    }
+
+    .serviceContent p {
+        font-size: 12px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+}
+
+/* Очень маленькие экраны (ширина до 480px) */
+@media (max-width: 480px) {
+    .admin_users {
+        padding: 10px 10px 0;
+    }
+
+    h1 {
+        font-size: 16px;
+    }
+
+    .chartContainer {
+        height: 200px;
+    }
+
+    .serviceItem {
+        padding: 8px;
+    }
+
+    .serviceActions select {
+        font-size: 11px;
+        padding: 5px 6px;
+    }
+
+    .serviceContent h3 {
+        font-size: 13px;
+    }
+
+    .serviceContent p {
+        font-size: 11px;
+    }
+
+    p {
+        font-size: 12px;
+    }
+}

@@ -2,21 +2,27 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import style from "../MyServices/MyServices.module.css";
 import Chart from "chart.js/auto";
+import { Pagination } from "antd";
 
 export const AdminServices = () => {
   const [orders, setOrders] = useState([]);
   const [statistics, setStatistics] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalOrders, setTotalOrders] = useState(0);
   let chartInstance = null; // Переменная для хранения экземпляра диаграммы
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get("http://localhost:8080/api/admin/orders", {
+          params: { page: currentPage - 1, size: pageSize }, // Пагинация: page начинается с 0
           withCredentials: true,
         });
-        setOrders(response.data);
+        setOrders(response.data.content || response.data); // Предполагается, что API возвращает content и totalElements
+        setTotalOrders(response.data.totalElements || response.data.length);
       } catch (err) {
         setError("Ошибка при загрузке заказов");
         console.error(err);
@@ -39,7 +45,7 @@ export const AdminServices = () => {
 
     fetchOrders();
     fetchStatistics();
-  }, []);
+  }, [currentPage, pageSize]);
 
   useEffect(() => {
     if (Object.keys(statistics).length > 0 && !loading) {
@@ -69,20 +75,20 @@ export const AdminServices = () => {
               title: {
                 display: true,
                 text: "Количество заказов",
-                font:{
+                font: {
                   family: "Oswald",
                   weight: 300,
-                }
+                },
               },
             },
             x: {
               title: {
                 display: true,
                 text: "Услуги",
-                font:{
+                font: {
                   family: "Oswald",
                   weight: 300,
-                }
+                },
               },
             },
           },
@@ -119,9 +125,11 @@ export const AdminServices = () => {
         newStatus,
         { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
-      setOrders(orders.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      ));
+      setOrders(
+        orders.map((order) =>
+          order.id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
       // Обновляем статистику после изменения статуса
       const response = await axios.get("http://localhost:8080/api/admin/orders/statistics", {
         withCredentials: true,
@@ -131,6 +139,11 @@ export const AdminServices = () => {
       setError("Ошибка при обновлении статуса");
       console.error(err);
     }
+  };
+
+  const handlePageChange = (page, pageSize) => {
+    setCurrentPage(page);
+    setPageSize(pageSize);
   };
 
   if (loading) return <div className={style.container}>Загрузка...</div>;
@@ -149,27 +162,37 @@ export const AdminServices = () => {
       {orders.length === 0 ? (
         <p>Нет заказанных услуг.</p>
       ) : (
-        <ul className={style.serviceList}>
-          {orders.map((order) => (
-            <li key={order.id} className={style.serviceItem}>
-              <div className={style.serviceContent}>
-                <h3>{order.service}</h3>
-                <p>Пользователь: {order.userName}</p>
-                <p>Дата заказа: {new Date(order.orderDate).toLocaleString()}</p>
-              </div>
-              <div className={style.serviceActions}>
-                <select
-                  value={order.status}
-                  onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                >
-                  <option value="В обработке">В обработке</option>
-                  <option value="Выполняется">Выполняется</option>
-                  <option value="Завершено">Завершено</option>
-                </select>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className={style.serviceList}>
+            {orders.map((order) => (
+              <li key={order.id} className={style.serviceItem}>
+                <div className={style.serviceContent}>
+                  <h3>{order.service}</h3>
+                  <p>Пользователь: {order.userName}</p>
+                  <p>Дата заказа: {new Date(order.orderDate).toLocaleString()}</p>
+                </div>
+                <div className={style.serviceActions}>
+                  <select
+                    value={order.status}
+                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                  >
+                    <option value="В обработке">В обработке</option>
+                    <option value="Выполняется">Выполняется</option>
+                    <option value="Завершено">Завершено</option>
+                  </select>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={totalOrders}
+            onChange={handlePageChange}
+          
+            className={style.pagination}
+          />
+        </>
       )}
     </div>
   );
