@@ -6,7 +6,7 @@ import { addProduct, updateProduct } from "../../../api/api";
 export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => {
   const [title, setTitle] = useState(product?.title || "");
   const [description, setDescription] = useState(product?.description || "");
-  const [category, setCategory] = useState(product?.category || ""); // Новое поле
+  const [category, setCategory] = useState(product?.category || ""); 
   const [imageFile, setImageFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(product?.imgSrc || "");
   const [error, setError] = useState(null);
@@ -33,7 +33,7 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
     const newProductData = {
       title,
       description,
-      category, // Добавляем категорию
+      category,
       image: imageFile,
     };
 
@@ -42,7 +42,7 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
         const formData = new FormData();
         formData.append("title", title);
         formData.append("description", description);
-        formData.append("category", category); // Отправляем категорию
+        formData.append("category", category); 
         if (imageFile) {
           formData.append("image", imageFile);
         }
@@ -53,7 +53,7 @@ export const EditProductForm = ({ product, onSave, onCancel, onAddProduct }) => 
       }
       setTitle("");
       setDescription("");
-      setCategory(""); // Очищаем категорию
+      setCategory("");
       setImageFile(null);
       setPreviewUrl("");
       setError(null);

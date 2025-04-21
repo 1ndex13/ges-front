@@ -4,7 +4,8 @@
   font-family: "Oswald", sans-serif;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding-top: 40px;
+  padding-bottom: 40px ;
 }
 
 .container h1 {

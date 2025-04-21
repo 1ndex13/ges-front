@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap');
-
+/* Базовые стили */
 .container {
   font-family: 'Oswald', sans-serif;
   margin: 0 auto;
@@ -13,7 +12,7 @@
 }
 
 .textForm {
-  position: relative; /* Делаем контейнер для изображения относительным */ /* Отступ между изображением и формой */
+  position: relative;
 }
 
 .textForm img {
@@ -26,11 +25,11 @@
 
 .textForm ul {
   position: absolute;
-  top: 20px;
+  top: 350px;
   left: 20px;
   list-style: none;
   padding: 0;
-  margin-top: 350px;
+  margin: 0;
 }
 
 .textForm li {
@@ -39,10 +38,9 @@
   margin-bottom: 10px;
   border-radius: 8px;
   font-size: 15px;
-  color: #333;
+  color: #fff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: #fff;
 }
 
 .textForm li:hover {
@@ -56,7 +54,7 @@
   flex-direction: column;
   background-color: #ffffff;
   width: 400px;
-  height: 420px;
+  height: 500px;
   padding: 40px;
   border-radius: 0px 12px 12px 0px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -76,29 +74,23 @@
   margin-bottom: 10px;
 }
 
-
-input{
+input {
   font-family: "Oswald", sans-serif;
 }
 
-
-.authText a{
+.authText a {
   text-decoration: none;
-  padding-top: 20px;
   cursor: pointer;
-  align-items: center;
   font-size: 14px;
   color: #666;
 }
 
-.forgetPassword a{
+.forgetPassword a {
   text-decoration: none;
-  padding-top: 10px;
   cursor: pointer;
   font-size: 16px;
   color: #666;
-  justify-content: end;
-
+  text-align: right;
 }
 
 .authForm input {
@@ -116,7 +108,7 @@ input{
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-button{
+button {
   font-family: "Oswald", sans-serif;
 }
 
@@ -134,4 +126,71 @@ button{
 
 .authForm button:hover {
   background-color: #6c747c;
+}
+
+/* Медиа-запросы для адаптации */
+@media (max-width: 1024px) {
+  ul{
+    display: none;
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+  }
+
+  .textForm img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px 12px 0px 0px;
+  }
+
+  .authForm {
+    width: 100%;
+    height: auto;
+    border-radius: 0px 0px 12px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .authForm {
+    padding: 20px;
+  }
+
+  .authText h2 {
+    font-size: 24px;
+  }
+
+  .authForm input,
+  .authForm button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  /* Убираем элементы <li> */
+  .textForm li {
+    display: none; /* Скрываем элементы <li> */
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    margin-top: 15px;
+  }
+
+  .authText h2 {
+    font-size: 20px;
+  }
+
+  .authForm input,
+  .authForm button {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .authText a,
+  .forgetPassword a {
+    font-size: 12px;
+  }
 }

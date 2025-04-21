@@ -1,4 +1,8 @@
 import style from "./Footer.module.css";
+import youtube from "../../assets/img/youtube.png"
+import vk from "../../assets/img/vk.png"
+import telegram from "../../assets/img/tel.png"
+
 
 export const Footer = () => {
   return (
@@ -13,15 +17,15 @@ export const Footer = () => {
         <div className={style.menu_footer}>
           <h3>Социальные сети</h3>
           <p>
-            <img src="/tel.png" alt="telegram-app--v1" />
+            <img src={telegram} alt="telegram" />
             Telegram
           </p>
           <p>
-            <img src="/vk.png" alt="vk-com" />
+            <img src={vk} alt="vk-com"/>
             Вконтакте
           </p>
           <p>
-            <img src="/youtube.png" alt="youtube-play" />
+            <img src={youtube} alt="youtube-play" />
             Youtube
           </p>
         </div>

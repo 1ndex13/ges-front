@@ -1,7 +1,8 @@
-  import React from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import { Link, useNavigate } from "react-router-dom";
 import style from "./Login.module.css";
+import  oliman  from "../../../assets/img/oliman.png"
 import { userStore } from "../../../api/UserStore";
 
 
@@ -16,7 +17,7 @@ export const Login = observer(() => {
   return (
     <div className={style.container}>
       <div className={style.textForm}>
-        <img src="/a-clean-oilman-at-work.png" alt="" />
+        <img src={oliman} alt="" />
         <ul>
           <li>Бурение скважин</li>
           <li>Добыча нефти и газа</li>

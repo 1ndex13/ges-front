@@ -3,6 +3,9 @@ import style from "./Contacts.module.css";
 import { ReviewModal } from "./ReviewModal";
 import axiosInstance from "../../../api/axiosConfig";
 import { userStore } from "../../../api/UserStore";
+import wa from "../../../assets/img/whatsapp.png"
+import vk from "../../../assets/img/vk.png"
+import telegram from "../../../assets/img/tel.png"
 
 export const Contacts = () => {
   const [isReviewModalOpen, setReviewModalOpen] = useState(false);
@@ -91,13 +94,13 @@ export const Contacts = () => {
           </div>
           <div className={style.social}>
             <a href="#" className={style.socialLink}>
-              Telegram <img src="/tel.png" alt="Telegram" />
+              Telegram <img src={telegram} alt="Telegram" />
             </a>
             <a href="#" className={style.socialLink}>
-              Вконтакте <img src="/vk.png" alt="VK" />
+              Вконтакте <img src={vk} alt="VK" />
             </a>
             <a href="#" className={style.socialLink}>
-              WhatsApp <img src="/whatsapp.png" alt="WhatsApp" />
+              WhatsApp <img src={wa} alt="WhatsApp" />
             </a>
             <button onClick={handleOrderClick} className={style.socialLink}>
               Оставить отзыв

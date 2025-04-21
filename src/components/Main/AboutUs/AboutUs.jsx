@@ -1,11 +1,15 @@
 import style from "./AboutUs.module.css";
+import aboutus from "../../../assets/img/aboutus.png"
+import world from "../../../assets/img/world.png"
+import people from "../../../assets/img/people.png"
+import energy from "../../../assets/img/energy.png"
 
 
 export const AboutUs = () => {
   return (
     <div className={style.container}>
       <div className={style.oliman}>
-        <img src="./world.png" alt="" />
+        <img src={world} alt="" />
         <h4>О компании</h4>
         <h1>Миссия и стратегия развития</h1>
         <p>
@@ -19,7 +23,7 @@ export const AboutUs = () => {
       
       <div className={style.info_cards}>
         <div className={style.info_card}>
-          <img src="./aboutus.png" alt="" />
+          <img src={aboutus} alt="" />
           <h3>О «Global Energy Solution»</h3>
           <p>
             Основные виды деятельности компании — поиск месторождений
@@ -28,7 +32,7 @@ export const AboutUs = () => {
           <h6>Узнать больше</h6>
         </div>
         <div className={style.info_card}>
-          <img src="./people.png" alt="" />
+          <img src={people} alt="" />
           <h3>Миссия и стратегия</h3>
           <p>
             «Global Energy Solution» создает ресурсы для будущего, обогащая мир энергией,
@@ -37,7 +41,7 @@ export const AboutUs = () => {
           <h6>Узнать больше</h6>
         </div>
         <div className={style.info_card}>
-          <img src="./energy.png" alt="" />
+          <img src={energy} alt="" />
           <h3>Энергия в людях</h3>
           <p>
             Сегодня в «Global Energy Solution» работает более 80 тысяч сотрудников.

@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
 import style from "./Main.module.css";
+import oil_tank from "../../../assets/img/second_oil_tank.png"
+import oilpump from "../../../assets/img/oilpump.png"
+import oil_tanc from "../../../assets/img/oil_tank.png"
+import oiltrack from "../../../assets/img/oiltrack.png"
+import fries from  "../../../assets/img/Fries.png"
+import hr from  "../../../assets/img/hr-specialist.png"
+import tree from  "../../../assets/img/tree.png"
+import home from "../../../assets/img/home.png"
+import comfortable from "../../../assets/img/comfortablework.png"
+import oil_and_gas from "../../../assets/img/oil-and-gas.png"
 
 export const MainContent = () => {
   return (
@@ -15,19 +25,19 @@ const Slider = () => {
 
   const slides = [
     {
-      image: "oil_tank.png",
+      image: oil_tanc,
       title: "Наша цистерна — ваша надежность",
     },
     {
-      image: "second_oil_tank.png",
+      image: oil_tank,
       title: "Эффективное хранение — залог стабильности",
     },
     {
-      image: "olitrack.png",
+      image: oiltrack,
       title: "Ваш надежный партнер в доставке топлива",
     },
     {
-      image: "oilpump.png",
+      image: oilpump,
       title: "Добыча, на которую можно положиться",
     },
   ];
@@ -78,32 +88,32 @@ const Card = () => {
     {
       title: "Топливо фри",
       description: "Смотрим, как картошка фри помогает создавать экологическое топливо для судов",
-      imgSrc: "./Fries.png",
+      imgSrc: fries,
     },
     {
       title: "Сказки крайнего севера",
       description: "Слушайте новогодний выпуск на популярных Российских аудиосервисах",
-      imgSrc: "./public/understated-cartoon-style-tales-of-the-far-north.png",
+      imgSrc: tree,
     },
     {
       title: "С любовью к родным городам",
       description: "Как сделать комфортнее жизнь в любом уголке мира: советы, лайфхаки и многое другое",
-      imgSrc: "./hometown-love-cartoon.png",
+      imgSrc: home,
     },
     {
       title: "10 вопросов HR-специалисту",
       description: "Как стать частью нашей огромной команды 'Global Energy Solution'",
-      imgSrc: "./hr-specialist.png",
+      imgSrc: hr,
     },
     {
       title: "С заботой о нефтяниках",
       description: "Создаем лучшие условия для работы и развития настоящих профессионалов",
-      imgSrc: "./comfortablework.png",
+      imgSrc: comfortable,
     },
     {
       title: "Интересное о нефти и газе",
       description: "Смотрите наш увлекательный мультфильм о нефти и газе. Все хитрости добычи ресурсов",
-      imgSrc: "./oil-and-gas.png",
+      imgSrc: oil_and_gas,
     },
   ];
 

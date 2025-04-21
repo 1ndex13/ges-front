@@ -11,8 +11,6 @@
     max-width: 1440px; /* Ограничим максимальную ширину */
     width: 100%; /* Адаптивная ширина */
     margin: 0 auto;
-    padding: 0 15px; /* Отступы для маленьких экранов */
-    margin-top: 10px;
 }
 
 .container h1 {
@@ -23,6 +21,7 @@
 }
 
 .container p {
+    text-align: start;
     font-size: 22px;
     font-weight: 300;
     margin: 0 0 20px;
@@ -127,9 +126,6 @@
     flex: 0 0 calc(33.33% - 20px); /* 3 карточки в ряд с учетом gap */
 }
 
-.card:hover {
-    transform: scale(1.05);
-}
 
 .card img {
     width: 100%;
@@ -140,7 +136,7 @@
 
 .overlay {
     position: absolute;
-    bottom: -80px;
+    bottom: -180px;
     left: 0;
     right: 0;
     background-color: rgba(0, 0, 0, 0.7);
@@ -150,7 +146,8 @@
     align-items: center;
     justify-content: center;
     transition: bottom 0.3s ease-in-out;
-    padding: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .overlay.show {

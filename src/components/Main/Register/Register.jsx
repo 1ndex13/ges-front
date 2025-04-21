@@ -3,6 +3,7 @@ import { observer } from "mobx-react";
 import style from "./Register.module.css";
 import { Link, useNavigate } from 'react-router-dom';
 import { userStore } from "../../../api/UserStore";
+import  oliman  from "../../../assets/img/oliman.png"
 
 export const Register = observer(() => {
   const navigate = useNavigate(); // Получаем функцию navigate
@@ -15,7 +16,7 @@ export const Register = observer(() => {
   return (
     <div className={style.container}>
       <div className={style.textForm}>
-        <img src="/a-clean-oilman-at-work.png" alt="" />
+        <img src={oliman} alt="" />
         <ul>
           <li>Бурение скважин</li>
           <li>Добыча нефти и газа</li>
